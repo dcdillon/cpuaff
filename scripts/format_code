@@ -3,17 +3,17 @@
 FILES=`find -name *.hpp`
 
 for FILE in $FILES ; do
-	echo clang-format -style=file -i $FILE
+	clang-format -style=file -i $FILE
 done;
 
 FILES=`find -name *.cpp`
 
 for FILE in $FILES ; do
-	echo clang-format -style=file -i $FILE
+	clang-format -style=file -i $FILE
 done;
 
 FILES=`find -name *.inl`
 
 for FILE in $FILES ; do
-	echo clang-format -style=file -i $FILE
+	clang-format -style=file -i $FILE
 done;
