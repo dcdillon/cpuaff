@@ -1,1 +1,1 @@
-SUBDIRS = include
+SUBDIRS = include examples

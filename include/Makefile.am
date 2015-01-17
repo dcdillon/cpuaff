@@ -1,1 +1,1 @@
-nobase_include_HEADERS = cpuaff/*.hpp cpuaff/detail/linux/*.hpp cpuaff/detail/hwloc/*.hpp cpuaff/detail/null/*.hpp
+nobase_include_HEADERS = cpuaff/*.hpp cpuaff/impl/linux_impl/*.hpp cpuaff/impl/hwloc_impl/*.hpp cpuaff/impl/null_impl/*.hpp

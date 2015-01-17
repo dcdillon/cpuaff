@@ -4,16 +4,13 @@
 AC_PREREQ([2.63])
 AC_INIT(libcpuaff, 0.1 , dcdillon@gmail.com)
 AM_INIT_AUTOMAKE(libcpuaff, 0.1)
-AC_OUTPUT(Makefile include/Makefile)
-AC_CONFIG_SRCDIR([examples/test.cpp])
+AC_OUTPUT(Makefile include/Makefile examples/Makefile)
 AC_CONFIG_HEADERS([config.h])
 
 # Checks for programs.
 AC_PROG_CXX
 
 # Checks for libraries.
-AC_HAVE_LIBRARY(hwloc)
-
 # Checks for header files.
 AC_CHECK_HEADERS([unistd.h])
 
@@ -25,5 +22,13 @@ AC_TYPE_SIZE_T
 AC_TYPE_UINT32_T
 
 # Checks for library functions.
+AC_CANONICAL_HOST
+case $host in
+	*linux*)
+		;;
+	*)
+		AC_CHECK_LIB(hwloc, hwloc_topology_init)
+		;;
+esac
 
 AC_OUTPUT
