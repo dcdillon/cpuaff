@@ -1,1 +1,2 @@
-SUBDIRS = include examples
+SUBDIRS = include examples tests
+TESTS = tests/test

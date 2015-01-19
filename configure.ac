@@ -3,8 +3,9 @@
 
 AC_PREREQ([2.63])
 AC_INIT(libcpuaff, 0.1 , dcdillon@gmail.com)
-AM_INIT_AUTOMAKE(libcpuaff, 0.1)
-AC_OUTPUT(Makefile include/Makefile examples/Makefile)
+#AM_INIT_AUTOMAKE(libcpuaff, 0.1)
+AM_INIT_AUTOMAKE
+AC_OUTPUT(Makefile include/Makefile examples/Makefile tests/Makefile)
 AC_CONFIG_HEADERS([config.h])
 
 # Checks for programs.
