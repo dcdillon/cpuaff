@@ -1,3 +1,3 @@
 exampledir = $(datarootdir)/cpuaff/examples
 example_PROGRAMS = test
-test_SOURCES = test.cpp
+test_SOURCES = test.cpp catch.hpp
