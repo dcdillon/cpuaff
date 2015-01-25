@@ -27,50 +27,50 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 #include <cpuaff/cpuaff.hpp>
 #include <iostream>
 
 int main(int argc, char *argv[])
 {
     cpuaff::affinity_manager manager;
-    
-    if (manager.initialize(false))
-    { 
-        cpuaff::cpu_set_type cpus;
+
+    if (manager.initialize())
+    {
+        cpuaff::cpu_set cpus;
         manager.get_affinity(cpus);
-        
+
         std::cout << "Initial Affinity:" << std::endl;
-        
-        cpuaff::cpu_set_type::iterator i = cpus.begin();
-        cpuaff::cpu_set_type::iterator iend = cpus.end();
-        
-        for ( ; i != iend; ++i)
+
+        cpuaff::cpu_set::iterator i = cpus.begin();
+        cpuaff::cpu_set::iterator iend = cpus.end();
+
+        for (; i != iend; ++i)
         {
             std::cout << "  " << (*i) << std::endl;
         }
-        
+
         std::cout << std::endl;
-        
+
         // set the affinity to all the processing units on the first core
-        cpuaff::cpu_set_type core_0;
+        cpuaff::cpu_set core_0;
         manager.get_cpus_by_core(core_0, 0);
-        
+
         manager.set_affinity(core_0);
         manager.get_affinity(cpus);
-        
+
         std::cout << "Affinity After Calling set_affinity():" << std::endl;
         i = cpus.begin();
         iend = cpus.end();
-        
-        for ( ; i != iend; ++i)
+
+        for (; i != iend; ++i)
         {
             std::cout << "  " << (*i) << std::endl;
         }
-        
+
         return 0;
     }
-    
+
     std::cerr << "cpuaff: unable to load cpus." << std::endl;
     return -1;
 }

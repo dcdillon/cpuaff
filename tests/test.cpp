@@ -27,7 +27,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
@@ -36,62 +36,54 @@
 TEST_CASE("affinity_manager", "[affinity_manager]")
 {
     cpuaff::affinity_manager manager;
-    
-    SECTION("affinity_manager::initialize(true)")
+
+    SECTION("affinity_manager::initialize()")
     {
-        REQUIRE(manager.initialize(true));
+        REQUIRE(manager.initialize());
         REQUIRE(manager.has_cpus());
-        REQUIRE(manager.has_native_mapping());
-        
+
 #if defined(CPUAFF_PCI_SUPPORTED)
         REQUIRE(manager.has_pci_devices());
 #endif
     }
-    
-    SECTION("affinity_manager::initialize(false)")
-    {
-        REQUIRE(manager.initialize(false));
-        REQUIRE(manager.has_cpus());
-        REQUIRE(!manager.has_native_mapping());
-        
-#if defined(CPUAFF_PCI_SUPPORTED)
-        REQUIRE(manager.has_pci_devices());
-#endif
-    }
-    
+
     SECTION("affinity_manager member functions")
     {
-        REQUIRE(manager.initialize(true));
-        
+        REQUIRE(manager.initialize());
+
         cpuaff::cpu cpu;
-        cpuaff::affinity_manager::native_cpu_wrapper_type native_wrapper;
-        cpuaff::cpu_set_type cpus;
-        
+        cpuaff::cpu_set cpus;
+
 #if defined(CPUAFF_PCI_SUPPORTED)
         cpuaff::pci_device_set devices;
         cpuaff::pci_device device;
 #endif
-        
+
         REQUIRE(manager.get_cpu_from_index(cpu, 0));
         REQUIRE(manager.get_cpu_from_id(cpu, cpu.id()));
         REQUIRE(manager.get_cpu_from_id(cpu, cpu.id().get()));
-        REQUIRE(manager.get_cpu_from_spec(cpu, cpuaff::cpu_spec(cpu.socket(), cpu.core(), cpu.processing_unit())));
-        REQUIRE(manager.get_native_from_cpu(native_wrapper, cpu));
-        REQUIRE(manager.get_cpu_from_native(cpu, native_wrapper));
-        REQUIRE(manager.get_cpu_from_native(cpu, native_wrapper.get()));
+        REQUIRE(manager.get_cpu_from_spec(
+            cpu,
+            cpuaff::cpu_spec(cpu.socket(), cpu.core(), cpu.processing_unit())));
+
         REQUIRE(manager.get_cpus(cpus));
         REQUIRE(manager.get_cpus_by_numa(cpus, cpu.numa()));
         REQUIRE(manager.get_cpus_by_socket(cpus, cpu.socket()));
         REQUIRE(manager.get_cpus_by_core(cpus, cpu.core()));
-        REQUIRE(manager.get_cpus_by_processing_unit(cpus, cpu.processing_unit()));
-        REQUIRE(manager.get_cpus_by_socket_and_core(cpus, cpu.socket(), cpu.core()));
-        
+        REQUIRE(
+            manager.get_cpus_by_processing_unit(cpus, cpu.processing_unit()));
+        REQUIRE(manager.get_cpus_by_socket_and_core(
+            cpus, cpu.socket(), cpu.core()));
+
 #if defined(CPUAFF_PCI_SUPPORTED)
         REQUIRE(manager.get_pci_devices(devices));
         device = *devices.begin();
         REQUIRE(manager.get_pci_device_for_address(device, device.address()));
-        REQUIRE(manager.get_pci_device_for_address(device, device.address().get()));
-        REQUIRE(manager.get_pci_devices_by_spec(devices, cpuaff::pci_device_spec(device.vendor(), device.device())));
+        REQUIRE(
+            manager.get_pci_device_for_address(device, device.address().get()));
+        REQUIRE(manager.get_pci_devices_by_spec(
+            devices,
+            cpuaff::pci_device_spec(device.vendor(), device.device())));
         REQUIRE(manager.get_pci_devices_by_numa(devices, device.numa()));
         REQUIRE(manager.get_pci_devices_by_vendor(devices, device.vendor()));
         REQUIRE(manager.get_nearby_cpus(cpus, device));
@@ -99,44 +91,44 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
 
         REQUIRE(manager.get_affinity(cpus));
         REQUIRE(cpus.size() > 0);
-        
-        cpuaff::cpu_set_type new_affinity;
+
+        cpuaff::cpu_set new_affinity;
         new_affinity.insert(cpu);
         REQUIRE(manager.set_affinity(new_affinity));
         REQUIRE(manager.get_affinity(cpus));
         REQUIRE(cpus.size() == new_affinity.size());
-        
+
         if (cpus.size() == new_affinity.size())
         {
-            cpuaff::cpu_set_type::iterator i = cpus.begin();
-            cpuaff::cpu_set_type::iterator iend = cpus.end();
-            cpuaff::cpu_set_type::iterator j = new_affinity.begin();
-            cpuaff::cpu_set_type::iterator jend = new_affinity.end();
-            
-            for ( ; i != iend && j != jend; ++i, ++j)
+            cpuaff::cpu_set::iterator i = cpus.begin();
+            cpuaff::cpu_set::iterator iend = cpus.end();
+            cpuaff::cpu_set::iterator j = new_affinity.begin();
+            cpuaff::cpu_set::iterator jend = new_affinity.end();
+
+            for (; i != iend && j != jend; ++i, ++j)
             {
                 REQUIRE((*i) == (*j));
             }
         }
-        
+
         REQUIRE(manager.get_cpus(new_affinity));
         REQUIRE(manager.set_affinity(new_affinity));
         REQUIRE(manager.get_affinity(cpus));
         REQUIRE(cpus.size() == new_affinity.size());
-        
+
         if (cpus.size() == new_affinity.size())
         {
-            cpuaff::cpu_set_type::iterator i = cpus.begin();
-            cpuaff::cpu_set_type::iterator iend = cpus.end();
-            cpuaff::cpu_set_type::iterator j = new_affinity.begin();
-            cpuaff::cpu_set_type::iterator jend = new_affinity.end();
-            
-            for ( ; i != iend && j != jend; ++i, ++j)
+            cpuaff::cpu_set::iterator i = cpus.begin();
+            cpuaff::cpu_set::iterator iend = cpus.end();
+            cpuaff::cpu_set::iterator j = new_affinity.begin();
+            cpuaff::cpu_set::iterator jend = new_affinity.end();
+
+            for (; i != iend && j != jend; ++i, ++j)
             {
                 REQUIRE((*i) == (*j));
             }
         }
-        
+
         REQUIRE(manager.pin(cpu));
         REQUIRE(manager.get_affinity(cpus));
         REQUIRE(cpus.size() == 1);
@@ -149,55 +141,119 @@ TEST_CASE("affinity_stack", "[affinity_stack]")
     SECTION("affinity_stack member functions")
     {
         cpuaff::affinity_manager manager;
-        
-        REQUIRE(manager.initialize(false));
-        
+
+        REQUIRE(manager.initialize());
+
         cpuaff::affinity_stack stack(manager);
-        
-        cpuaff::cpu_set_type original_affinity;
-        cpuaff::cpu_set_type new_affinity;
-        cpuaff::cpu_set_type cpus;
-        
+
+        cpuaff::cpu_set original_affinity;
+        cpuaff::cpu_set new_affinity;
+        cpuaff::cpu_set cpus;
+
         REQUIRE(stack.get_affinity(original_affinity));
         REQUIRE(original_affinity.size() > 0);
         REQUIRE(stack.push_affinity());
         REQUIRE(stack.get_affinity(cpus));
         REQUIRE(cpus.size() == original_affinity.size());
-        
+
         if (cpus.size() == original_affinity.size())
         {
-            cpuaff::cpu_set_type::iterator i = cpus.begin();
-            cpuaff::cpu_set_type::iterator iend = cpus.end();
-            cpuaff::cpu_set_type::iterator j = original_affinity.begin();
-            cpuaff::cpu_set_type::iterator jend = original_affinity.end();
-            
-            for ( ; i != iend && j != jend; ++i, ++j)
+            cpuaff::cpu_set::iterator i = cpus.begin();
+            cpuaff::cpu_set::iterator iend = cpus.end();
+            cpuaff::cpu_set::iterator j = original_affinity.begin();
+            cpuaff::cpu_set::iterator jend = original_affinity.end();
+
+            for (; i != iend && j != jend; ++i, ++j)
             {
                 REQUIRE((*i) == (*j));
             }
         }
-        
+
         new_affinity.insert(*original_affinity.begin());
-        
+
         REQUIRE(stack.set_affinity(new_affinity));
         REQUIRE(stack.get_affinity(cpus));
         REQUIRE(cpus.size() == 1);
         REQUIRE(*cpus.begin() == *new_affinity.begin());
-        
+
         REQUIRE(stack.pop_affinity());
         REQUIRE(stack.get_affinity(cpus));
         REQUIRE(cpus.size() == original_affinity.size());
-        
+
         if (cpus.size() == original_affinity.size())
         {
-            cpuaff::cpu_set_type::iterator i = cpus.begin();
-            cpuaff::cpu_set_type::iterator iend = cpus.end();
-            cpuaff::cpu_set_type::iterator j = original_affinity.begin();
-            cpuaff::cpu_set_type::iterator jend = original_affinity.end();
-            
-            for ( ; i != iend && j != jend; ++i, ++j)
+            cpuaff::cpu_set::iterator i = cpus.begin();
+            cpuaff::cpu_set::iterator iend = cpus.end();
+            cpuaff::cpu_set::iterator j = original_affinity.begin();
+            cpuaff::cpu_set::iterator jend = original_affinity.end();
+
+            for (; i != iend && j != jend; ++i, ++j)
             {
                 REQUIRE((*i) == (*j));
+            }
+        }
+    }
+}
+
+TEST_CASE("round_robin_allocator", "[round_robin_allocator]")
+{
+    SECTION("round_robin_allocator member functions")
+    {
+        cpuaff::affinity_manager manager;
+
+        REQUIRE(manager.initialize());
+
+        cpuaff::round_robin_allocator allocator;
+        cpuaff::cpu_set cpus;
+        cpuaff::cpu_set allocated_cpus;
+        cpuaff::cpu cpu;
+
+        REQUIRE(manager.get_cpus(cpus));
+        REQUIRE(allocator.initialize(cpus));
+
+        for (int i = 0; i < cpus.size() * 2; ++i)
+        {
+            cpu = allocator.allocate();
+            bool test = cpu.socket() >= 0 && cpu.core() >= 0 &&
+                        cpu.processing_unit() >= 0;
+            REQUIRE(test);
+        }
+
+        REQUIRE(allocator.allocate(allocated_cpus, 4));
+
+        bool test =
+            allocated_cpus.size() == 4 ||
+            (allocated_cpus.size() < 4 && allocated_cpus.size() == cpus.size());
+        REQUIRE(test);
+    }
+}
+
+TEST_CASE("native_cpu_mapper", "[native_cpu_mapper]")
+{
+    SECTION("native_cpu_mapper member functions")
+    {
+        cpuaff::affinity_manager manager;
+
+        REQUIRE(manager.initialize());
+
+        cpuaff::native_cpu_mapper mapper;
+
+        if (mapper.initialize(manager))
+        {
+            cpuaff::cpu_set cpus;
+            manager.get_cpus(cpus);
+
+            cpuaff::cpu_set::iterator i = cpus.begin();
+            cpuaff::cpu_set::iterator iend = cpus.end();
+
+            for (; i != iend; ++i)
+            {
+                cpuaff::native_cpu_mapper::native_cpu_wrapper_type native;
+                cpuaff::cpu cpu;
+
+                REQUIRE(mapper.get_native_from_cpu(native, *i));
+                REQUIRE(mapper.get_cpu_from_native(cpu, native));
+                REQUIRE(mapper.get_cpu_from_native(cpu, native.get()));
             }
         }
     }

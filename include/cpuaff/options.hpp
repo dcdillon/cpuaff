@@ -28,69 +28,19 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <cpuaff/cpuaff.hpp>
-#include <iostream>
+#pragma once
 
-int main(int argc, char *argv[])
-{
-    cpuaff::affinity_manager manager;
+#if defined(__linux__)
+#define CPUAFF_PCI_SUPPORTED
+#endif
 
-    if (manager.initialize())
-    {
-        cpuaff::affinity_stack stack(manager);
+#if defined(_WIN32) || defined(_AIX) || defined(__FreeBSD__) || \
+    defined(NetBSD) || defined(_hpux) || defined(sun) ||        \
+    (defined(__APPLE__) && defined(__MACH__))
 
-        cpuaff::cpu_set cpus;
-        manager.get_affinity(cpus);
+#define CPUAFF_USE_HWLOC
+#endif
 
-        std::cout << "Initial Affinity:" << std::endl;
-
-        cpuaff::cpu_set::iterator i = cpus.begin();
-        cpuaff::cpu_set::iterator iend = cpus.end();
-
-        for (; i != iend; ++i)
-        {
-            std::cout << "  " << (*i) << std::endl;
-        }
-
-        std::cout << std::endl;
-
-        stack.push_affinity();
-
-        // set the affinity to all the processing units on the first core
-        cpuaff::cpu_set core_0;
-        manager.get_cpus_by_core(core_0, 0);
-
-        manager.set_affinity(core_0);
-        manager.get_affinity(cpus);
-
-        std::cout << "Affinity After Calling set_affinity():" << std::endl;
-        i = cpus.begin();
-        iend = cpus.end();
-
-        for (; i != iend; ++i)
-        {
-            std::cout << "  " << (*i) << std::endl;
-        }
-
-        std::cout << std::endl;
-
-        // restore the affinity to its initial value
-        stack.pop_affinity();
-
-        manager.get_affinity(cpus);
-
-        std::cout << "Affinity After Calling pop_affinity():" << std::endl;
-        i = cpus.begin();
-        iend = cpus.end();
-
-        for (; i != iend; ++i)
-        {
-            std::cout << "  " << (*i) << std::endl;
-        }
-
-        return 0;
-    }
-
-    std::cerr << "cpuaff: unable to load cpus." << std::endl;
-    return -1;
-}
+#if defined(CPUAFF_USE_HWLOC)
+#undef CPUAFF_PCI_SUPPORTED
+#endif

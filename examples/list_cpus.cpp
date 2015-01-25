@@ -27,30 +27,30 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 #include <cpuaff/cpuaff.hpp>
 #include <iostream>
 
 int main(int argc, char *argv[])
 {
     cpuaff::affinity_manager manager;
-    
-    if (manager.initialize(false))
-    { 
-        cpuaff::cpu_set_type cpus;
+
+    if (manager.initialize())
+    {
+        cpuaff::cpu_set cpus;
         manager.get_cpus(cpus);
-        
-        cpuaff::cpu_set_type::iterator i = cpus.begin();
-        cpuaff::cpu_set_type::iterator iend = cpus.end();
-        
-        for ( ; i != iend; ++i)
+
+        cpuaff::cpu_set::iterator i = cpus.begin();
+        cpuaff::cpu_set::iterator iend = cpus.end();
+
+        for (; i != iend; ++i)
         {
             std::cout << (*i) << std::endl;
         }
-        
+
         return 0;
     }
-    
+
     std::cerr << "cpuaff: unable to load cpus." << std::endl;
     return -1;
 }

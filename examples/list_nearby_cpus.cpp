@@ -27,7 +27,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 #include <cpuaff/cpuaff.hpp>
 #include <iostream>
 
@@ -35,44 +35,44 @@ int main(int argc, char *argv[])
 {
 #if defined(CPUAFF_PCI_SUPPORTED)
     cpuaff::affinity_manager manager;
-    
-    if (manager.initialize(false))
-    {
 
+    if (manager.initialize())
+    {
         cpuaff::pci_device_set devices;
         manager.get_pci_devices(devices);
-        
+
         cpuaff::pci_name_resolver resolver;
         resolver.initialize("/usr/share/hwdata/pci.ids");
-        
+
         cpuaff::pci_device_set::iterator i = devices.begin();
         cpuaff::pci_device_set::iterator iend = devices.end();
-        
-        for ( ; i != iend; ++i)
+
+        for (; i != iend; ++i)
         {
             cpuaff::pci_device_description des;
-            resolver.get_description(des, *i);
+            resolver.get_description(des, i->spec());
             std::cout << (*i) << " - " << des << std::endl;
-            
-            cpuaff::cpu_set_type cpus;
+
+            cpuaff::cpu_set cpus;
             manager.get_nearby_cpus(cpus, *i);
-            
-            cpuaff::cpu_set_type::iterator i = cpus.begin();
-            cpuaff::cpu_set_type::iterator iend = cpus.end();
-            
-            for ( ; i != iend; ++i)
+
+            cpuaff::cpu_set::iterator i = cpus.begin();
+            cpuaff::cpu_set::iterator iend = cpus.end();
+
+            for (; i != iend; ++i)
             {
                 std::cout << "  " << (*i) << std::endl;
             }
         }
-        
+
         return 0;
     }
-    
+
     std::cerr << "cpuaff: unable to initialize affinity_manager." << std::endl;
     return -1;
 #else
-    std::cerr << "cpuaff: PCI mapping not supported on this platform." << std::endl;
+    std::cerr << "cpuaff: PCI mapping not supported on this platform."
+              << std::endl;
     return -1;
 #endif
 }

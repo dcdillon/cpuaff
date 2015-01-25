@@ -28,69 +28,55 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <cpuaff/cpuaff.hpp>
-#include <iostream>
+#pragma once
 
-int main(int argc, char *argv[])
+#include "options.hpp"
+#include <stdint.h>
+
+namespace cpuaff
 {
-    cpuaff::affinity_manager manager;
+class cpu_spec;
 
-    if (manager.initialize())
-    {
-        cpuaff::affinity_stack stack(manager);
+namespace impl
+{
+template < typename TRAITS >
+class basic_cpu;
 
-        cpuaff::cpu_set cpus;
-        manager.get_affinity(cpus);
+template < typename TRAITS >
+class basic_affinity_manager;
 
-        std::cout << "Initial Affinity:" << std::endl;
+template < typename TRAITS >
+class basic_cpu_set;
 
-        cpuaff::cpu_set::iterator i = cpus.begin();
-        cpuaff::cpu_set::iterator iend = cpus.end();
+template < typename TRAITS >
+class basic_affinity_stack;
 
-        for (; i != iend; ++i)
-        {
-            std::cout << "  " << (*i) << std::endl;
-        }
+template < typename TRAITS >
+class basic_affinity_stack;
+}  // namespace impl
 
-        std::cout << std::endl;
+typedef int32_t socket_type;
+typedef int32_t core_type;
+typedef int32_t processing_unit_type;
+typedef int32_t numa_type;
 
-        stack.push_affinity();
+#if defined(CPUAFF_PCI_SUPPORTED)
 
-        // set the affinity to all the processing units on the first core
-        cpuaff::cpu_set core_0;
-        manager.get_cpus_by_core(core_0, 0);
+class pci_device_spec;
+class pci_device_description;
+class pci_name_resolver;
 
-        manager.set_affinity(core_0);
-        manager.get_affinity(cpus);
+namespace impl
+{
+template < typename TRAITS >
+class basic_pci_device;
 
-        std::cout << "Affinity After Calling set_affinity():" << std::endl;
-        i = cpus.begin();
-        iend = cpus.end();
+template < typename TRAITS >
+class basic_pci_device_set;
+}  // namespace impl
 
-        for (; i != iend; ++i)
-        {
-            std::cout << "  " << (*i) << std::endl;
-        }
+typedef int32_t pci_vendor_id_type;
+typedef int32_t pci_device_id_type;
 
-        std::cout << std::endl;
-
-        // restore the affinity to its initial value
-        stack.pop_affinity();
-
-        manager.get_affinity(cpus);
-
-        std::cout << "Affinity After Calling pop_affinity():" << std::endl;
-        i = cpus.begin();
-        iend = cpus.end();
-
-        for (; i != iend; ++i)
-        {
-            std::cout << "  " << (*i) << std::endl;
-        }
-
-        return 0;
-    }
-
-    std::cerr << "cpuaff: unable to load cpus." << std::endl;
-    return -1;
-}
+#endif
+}  // namespace cpuaff

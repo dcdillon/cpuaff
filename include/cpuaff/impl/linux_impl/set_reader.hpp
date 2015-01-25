@@ -28,69 +28,68 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <cpuaff/cpuaff.hpp>
-#include <iostream>
+#pragma once
 
-int main(int argc, char *argv[])
+#include <cstdlib>
+#include <cstring>
+#include <stdint.h>
+#include <string>
+#include <set>
+#include <vector>
+
+namespace cpuaff
 {
-    cpuaff::affinity_manager manager;
+namespace impl
+{
+namespace linux_impl
+{
+namespace set_reader
+{
+inline bool read_int_set(std::set< int32_t > &set, const std::string &str)
+{
+    std::vector< std::string > elem;
 
-    if (manager.initialize())
+    char buf[2048];
+    strcpy(buf, str.c_str());
+
+    char *tok = strtok(buf, ",");
+
+    while (tok)
     {
-        cpuaff::affinity_stack stack(manager);
-
-        cpuaff::cpu_set cpus;
-        manager.get_affinity(cpus);
-
-        std::cout << "Initial Affinity:" << std::endl;
-
-        cpuaff::cpu_set::iterator i = cpus.begin();
-        cpuaff::cpu_set::iterator iend = cpus.end();
-
-        for (; i != iend; ++i)
-        {
-            std::cout << "  " << (*i) << std::endl;
-        }
-
-        std::cout << std::endl;
-
-        stack.push_affinity();
-
-        // set the affinity to all the processing units on the first core
-        cpuaff::cpu_set core_0;
-        manager.get_cpus_by_core(core_0, 0);
-
-        manager.set_affinity(core_0);
-        manager.get_affinity(cpus);
-
-        std::cout << "Affinity After Calling set_affinity():" << std::endl;
-        i = cpus.begin();
-        iend = cpus.end();
-
-        for (; i != iend; ++i)
-        {
-            std::cout << "  " << (*i) << std::endl;
-        }
-
-        std::cout << std::endl;
-
-        // restore the affinity to its initial value
-        stack.pop_affinity();
-
-        manager.get_affinity(cpus);
-
-        std::cout << "Affinity After Calling pop_affinity():" << std::endl;
-        i = cpus.begin();
-        iend = cpus.end();
-
-        for (; i != iend; ++i)
-        {
-            std::cout << "  " << (*i) << std::endl;
-        }
-
-        return 0;
+        elem.push_back(tok);
+        tok = strtok(NULL, ",");
     }
 
-    std::cerr << "cpuaff: unable to load cpus." << std::endl;
-    return -1;
+    std::vector< std::string >::iterator i = elem.begin();
+    std::vector< std::string >::iterator iend = elem.end();
+
+    for (; i != iend; ++i)
+    {
+        if (i->find("-") == std::string::npos)
+        {
+            set.insert(atoi(i->c_str()));
+        }
+        else
+        {
+            char buf2[32];
+            strcpy(buf2, i->c_str());
+
+            tok = strtok(buf2, "-");
+
+            int32_t begin = atoi(tok);
+
+            tok = strtok(NULL, "-");
+
+            int32_t end = atoi(tok);
+
+            for (int32_t j = begin; j <= end; ++j)
+            {
+                set.insert(j);
+            }
+        }
+    }
 }
+}  // namespace set_reader
+}  // namespace linux_impl
+}  // namespace impl
+}  // namespace cpuaff
