@@ -44,8 +44,6 @@ namespace impl
 template < typename TRAITS >
 class basic_cpu_set : public std::set< basic_cpu< TRAITS > >
 {
-   public:
-    typedef TRAITS affinity_traits;
 };
 }  // namespace impl
 }  // namespace cpuaff

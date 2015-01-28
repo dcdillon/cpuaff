@@ -44,8 +44,6 @@ namespace impl
 template < typename TRAITS >
 class basic_pci_device_set : public std::set< basic_pci_device< TRAITS > >
 {
-   public:
-    typedef TRAITS affinity_traits;
 };
 }  // namespace impl
 }  // namespace cpuaff
