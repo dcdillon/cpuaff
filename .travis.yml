@@ -11,23 +11,25 @@ language: cpp
 
 compiler:
   - gcc
-#  - clang
+  - clang
 
 before_install:
   - echo $LANG
   - echo $LC_ALL
   - sudo apt-get update && sudo apt-get install -y automake autoconf
   - if [ $CXX == g++ ]; then sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test; sudo apt-get update -qq; fi
-#  - if [ $CXX == clang++ ]; then sudo add-apt-repository ppa:h-rayflood/llvm; ; sudo apt-get update -qq; fi
+  - if [ $CXX == clang++ ]; then sudo add-apt-repository ppa:h-rayflood/llvm; ; sudo apt-get update -qq; fi
 
 install:
   - if [ $CXX == g++ ]; then sudo apt-get install g++-4.9; export CXX="g++-4.9"; fi
+  - if [ $CXX == clang++ ]; then sudo apt-get install clang++-3.5; export CXX="clang++-3.5"; fi
 
 before_script:
   - if [ $TRAVIS_OS_NAME == linux ]; then ./bootstrap.sh; fi
 
 script: 
-  - ./configure && make && make check
+# FIXME  - ./configure && make && make check
+  FIXME  - ./configure && make
 
 notifications:
   email:
