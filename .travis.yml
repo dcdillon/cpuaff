@@ -2,6 +2,9 @@
 #
 # See eg http://docs.travis-ci.com/user/languages/cpp/
 #
+# This is much simplified (rake-free) version of the example at 
+# https://github.com/rubinius/rubinius/blob/master/.travis.yml
+#
 # Dirk Eddelbuettel, 31 Jan 2015
 
 language: cpp
@@ -16,8 +19,7 @@ before_install:
   - if [ $TRAVIS_OS_NAME == linux ]; then sudo apt-get update && sudo apt-get install -y automake autoconf; fi
 
 before_script:
-  - travis_retry bundle
-  - if [ $TRAVIS_OS_NAME == linux ]; then travis_retry ./boostrap; fi
+  - if [ $TRAVIS_OS_NAME == linux ]; then ./boostrap.sh; fi
 
 script: 
   - ./configure && make && make check
