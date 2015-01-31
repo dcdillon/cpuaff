@@ -1,0 +1,32 @@
+# .travis.yml for cpuaff
+#
+# See eg http://docs.travis-ci.com/user/languages/cpp/
+#
+# Dirk Eddelbuettel, 31 Jan 2015
+
+language: cpp
+
+compiler:
+  - gcc
+  - clang
+
+before_install:
+  - echo $LANG
+  - echo $LC_ALL
+  - if [ $TRAVIS_OS_NAME == linux ]; then sudo apt-get update && sudo apt-get install -y automake autoconf; fi
+
+before_script:
+  - travis_retry bundle
+  - if [ $TRAVIS_OS_NAME == linux ]; then travis_retry ./boostrap; fi
+
+script: 
+  - ./configure && make && make check
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
+
+os:
+  - linux
+
