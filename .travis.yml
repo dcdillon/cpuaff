@@ -19,7 +19,7 @@ before_install:
   - if [ $TRAVIS_OS_NAME == linux ]; then sudo apt-get update && sudo apt-get install -y automake autoconf; fi
 
 before_script:
-  - if [ $TRAVIS_OS_NAME == linux ]; then ./boostrap.sh; fi
+  - if [ $TRAVIS_OS_NAME == linux ]; then ./bootstrap.sh; fi
 
 script: 
   - ./configure && make && make check
