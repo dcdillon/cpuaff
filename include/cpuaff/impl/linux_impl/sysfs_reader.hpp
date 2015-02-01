@@ -57,11 +57,16 @@ inline bool read_list(std::set< int32_t > &set, const std::string &_file)
 {
     set.clear();
     std::ifstream infile(_file.c_str());
-    std::string line;
-    std::getline(infile, line);
-
-    set_reader::read_int_set(set, line);
-    infile.close();
+    
+    if (infile.good())
+    {
+        std::string line;
+        std::getline(infile, line);
+    
+        set_reader::read_int_set(set, line);
+        infile.close();
+    }
+    
     return !!set.size();
 }
 
@@ -77,6 +82,30 @@ inline bool read_cpus(std::set< int32_t > &cpus, int32_t node)
     return read_list(cpus, buf.str());
 }
 
+inline bool read_cpus(std::set< int32_t > &cpus)
+{
+    return read_list(cpus, "/sys/devices/system/cpu/possible");
+}
+
+inline int32_t read_socket(int32_t cpu)
+{
+    std::ostringstream buf;
+    std::set< int32_t > sockets;
+    
+    buf << "/sys/devices/system/cpu/cpu" << cpu << "/topology/physical_package_id";
+    
+    read_list(sockets, buf.str());
+    
+    if (sockets.size() == 1)
+    {
+        return *sockets.begin();
+    }
+    else
+    {
+        return -1;
+    }
+}
+
 inline int32_t read_socket(int32_t node, int32_t cpu)
 {
     std::ostringstream buf;
@@ -90,6 +119,25 @@ inline int32_t read_socket(int32_t node, int32_t cpu)
     if (sockets.size() == 1)
     {
         return *sockets.begin();
+    }
+    else
+    {
+        return -1;
+    }
+}
+
+inline int32_t read_core(int32_t cpu)
+{
+    std::ostringstream buf;
+    std::set< int32_t > cores;
+    
+    buf << "/sys/devices/system/cpu/cpu" << cpu << "/topology/core_id";
+    
+    read_list(cores, buf.str());
+    
+    if (cores.size() == 1)
+    {
+        return *cores.begin();
     }
     else
     {
@@ -115,6 +163,25 @@ inline int32_t read_core(int32_t node, int32_t cpu)
     {
         return -1;
     }
+}
+
+inline bool read_cpu(std::vector< pu > &pus, int32_t cpu)
+{
+    int32_t socket = read_socket(cpu);
+    int32_t core = read_core(cpu);
+    
+    if (socket >= 0 && core >= 0)
+    {
+        pu u;
+        u.node = -1;
+        u.native = cpu;
+        u.socket = socket;
+        u.core = core;
+        pus.push_back(u);
+        return true;
+    }
+    
+    return false;
 }
 
 inline bool read_cpu(std::vector< pu > &pus, int32_t node, int32_t cpu)
@@ -158,14 +225,30 @@ inline bool load_cpus(std::vector< pu > &pus)
 
     std::set< int32_t > nodes;
 
-    read_nodes(nodes);
-
-    std::set< int32_t >::iterator i = nodes.begin();
-    std::set< int32_t >::iterator iend = nodes.end();
-
-    for (; i != iend; ++i)
+    if (read_nodes(nodes))
     {
-        read_node(pus, *i);
+        std::set< int32_t >::iterator i = nodes.begin();
+        std::set< int32_t >::iterator iend = nodes.end();
+    
+        for (; i != iend; ++i)
+        {
+            read_node(pus, *i);
+        }
+    }
+    else
+    {
+        // we don't have nodes to read, so let's just set node to
+        // -1 for everything and read the cpus
+        std::set< int32_t > cpus;
+        read_cpus(cpus);
+        
+        std::set< int32_t >::iterator i = cpus.begin();
+        std::set< int32_t >::iterator iend = cpus.end();
+        
+        for ( ; i != iend; ++i)
+        {
+            read_cpu(pus, *i);
+        }
     }
 
     return !!pus.size();

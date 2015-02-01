@@ -27,8 +27,8 @@ before_script:
   - if [ $TRAVIS_OS_NAME == linux ]; then ./bootstrap.sh; fi
 
 script: 
-# FIXME  - ./configure && make && make check
-  - ./configure && make
+  - ./configure && make && make check
+#  - ./configure && make
 
 notifications:
   email:
