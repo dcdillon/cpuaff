@@ -18,4 +18,6 @@ rm -rf Makefile.in \
     install-sh \
     missing \
     test-driver \
-    tests/Makefile.in 
+    tests/Makefile.in \
+    examples/Makefile.in \
+    include/Makefile.in
