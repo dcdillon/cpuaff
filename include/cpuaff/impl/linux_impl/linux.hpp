@@ -179,6 +179,7 @@ struct set_affinity
 
         for (; i != iend; ++i)
         {
+            std::cerr << "Setting affinity for " << i->get() << std::endl;
             CPU_SET(i->get(), &cpu_set);
         }
 
