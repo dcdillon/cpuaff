@@ -175,8 +175,8 @@ inline bool read_cpu(std::vector< pu > &pus, int32_t cpu)
     pu u;
     u.node = -1;
     u.native = cpu;
-    u.socket = socket;
-    u.core = core;
+    u.socket = (socket == -1) ? 0 : socket;
+    u.core = (core == -1) ? 0 : core;
     pus.push_back(u);
     return true;
 }
@@ -258,13 +258,9 @@ inline bool load_cpus(std::vector< pu > &pus)
                 while ((ent = readdir(dir)) != NULL)
                 {
                     std::string file = ent->d_name;
-
-                    std::cerr << "file name " << file << std::endl;
                     
                     if (file.substr(0, 3) == "cpu")
                     {
-                        std::cerr << "found a cpu" << std::endl;
-                        std::cerr << "cpu " << file.substr(3) << std::endl;
                         int32_t cpu = atoi(file.substr(3).c_str());
                         read_cpu(pus, cpu);
                     }
