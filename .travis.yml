@@ -18,7 +18,7 @@ before_install:
   - echo $LC_ALL
   - sudo apt-get update && sudo apt-get install -y automake autoconf
   - if [ $CXX == g++ ]; then sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test; sudo apt-get update -qq; fi
-  - ls /sys/devices/system
+  - ls /sys/devices/system/cpu/cpu0
 
 install:
   - if [ $CXX == g++ ]; then sudo apt-get install g++-4.9; export CXX="g++-4.9"; fi
