@@ -134,7 +134,7 @@ class basic_affinity_manager
 #if defined(CPUAFF_PCI_SUPPORTED)
         pci_loader_vector_type devices;
         loaded_pci_ = pci_loader_type()(devices);
-        retval = retval && loaded_pci_;
+        //retval = retval && loaded_pci_;
 
         typename pci_loader_vector_type::iterator k = devices.begin();
         typename pci_loader_vector_type::iterator kend = devices.end();
