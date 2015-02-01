@@ -41,10 +41,6 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
     {
         REQUIRE(manager.initialize());
         REQUIRE(manager.has_cpus());
-
-#if defined(CPUAFF_PCI_SUPPORTED)
-        REQUIRE(manager.has_pci_devices());
-#endif
     }
 
     SECTION("affinity_manager member functions")
@@ -76,17 +72,20 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
             cpus, cpu.socket(), cpu.core()));
 
 #if defined(CPUAFF_PCI_SUPPORTED)
-        REQUIRE(manager.get_pci_devices(devices));
-        device = *devices.begin();
-        REQUIRE(manager.get_pci_device_for_address(device, device.address()));
-        REQUIRE(
-            manager.get_pci_device_for_address(device, device.address().get()));
-        REQUIRE(manager.get_pci_devices_by_spec(
-            devices,
-            cpuaff::pci_device_spec(device.vendor(), device.device())));
-        REQUIRE(manager.get_pci_devices_by_numa(devices, device.numa()));
-        REQUIRE(manager.get_pci_devices_by_vendor(devices, device.vendor()));
-        REQUIRE(manager.get_nearby_cpus(cpus, device));
+        if (manager.has_pci_devices())
+        {
+            REQUIRE(manager.get_pci_devices(devices));
+            device = *devices.begin();
+            REQUIRE(manager.get_pci_device_for_address(device, device.address()));
+            REQUIRE(
+                manager.get_pci_device_for_address(device, device.address().get()));
+            REQUIRE(manager.get_pci_devices_by_spec(
+                devices,
+                cpuaff::pci_device_spec(device.vendor(), device.device())));
+            REQUIRE(manager.get_pci_devices_by_numa(devices, device.numa()));
+            REQUIRE(manager.get_pci_devices_by_vendor(devices, device.vendor()));
+            REQUIRE(manager.get_nearby_cpus(cpus, device));
+        }
 #endif
 
         REQUIRE(manager.get_affinity(cpus));
