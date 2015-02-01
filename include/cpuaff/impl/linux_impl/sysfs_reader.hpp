@@ -57,16 +57,16 @@ inline bool read_list(std::set< int32_t > &set, const std::string &_file)
 {
     set.clear();
     std::ifstream infile(_file.c_str());
-    
+
     if (infile.good())
     {
         std::string line;
         std::getline(infile, line);
-    
+
         set_reader::read_int_set(set, line);
         infile.close();
     }
-    
+
     return !!set.size();
 }
 
@@ -91,11 +91,12 @@ inline int32_t read_socket(int32_t cpu)
 {
     std::ostringstream buf;
     std::set< int32_t > sockets;
-    
-    buf << "/sys/devices/system/cpu/cpu" << cpu << "/topology/physical_package_id";
-    
+
+    buf << "/sys/devices/system/cpu/cpu" << cpu
+        << "/topology/physical_package_id";
+
     read_list(sockets, buf.str());
-    
+
     if (sockets.size() == 1)
     {
         return *sockets.begin();
@@ -130,11 +131,11 @@ inline int32_t read_core(int32_t cpu)
 {
     std::ostringstream buf;
     std::set< int32_t > cores;
-    
+
     buf << "/sys/devices/system/cpu/cpu" << cpu << "/topology/core_id";
-    
+
     read_list(cores, buf.str());
-    
+
     if (cores.size() == 1)
     {
         return *cores.begin();
@@ -169,7 +170,7 @@ inline bool read_cpu(std::vector< pu > &pus, int32_t cpu)
 {
     int32_t socket = read_socket(cpu);
     int32_t core = read_core(cpu);
-    
+
     pu u;
     u.node = -1;
     u.native = cpu;
@@ -224,7 +225,7 @@ inline bool load_cpus(std::vector< pu > &pus)
     {
         std::set< int32_t >::iterator i = nodes.begin();
         std::set< int32_t >::iterator iend = nodes.end();
-    
+
         for (; i != iend; ++i)
         {
             read_node(pus, *i);
@@ -235,14 +236,35 @@ inline bool load_cpus(std::vector< pu > &pus)
         // we don't have nodes to read, so let's just set node to
         // -1 for everything and read the cpus
         std::set< int32_t > cpus;
-        read_cpus(cpus);
-        
-        std::set< int32_t >::iterator i = cpus.begin();
-        std::set< int32_t >::iterator iend = cpus.end();
-        
-        for ( ; i != iend; ++i)
+
+        if (read_cpus(cpus))
         {
-            read_cpu(pus, *i);
+            std::set< int32_t >::iterator i = cpus.begin();
+            std::set< int32_t >::iterator iend = cpus.end();
+
+            for (; i != iend; ++i)
+            {
+                read_cpu(pus, *i);
+            }
+        }
+        else
+        {
+            DIR *dir;
+            struct dirent *ent;
+
+            if ((dir = opendir("/sys/devices/system/cpu")) != NULL)
+            {
+                while ((ent = readdir(dir)) != NULL)
+                {
+                    std::string file = ent->d_name;
+
+                    if (file.substr(0, 3) == "cpu")
+                    {
+                        int32_t cpu = atoi(file.substr(3).c_str());
+                        read_cpu(pus, cpu);
+                    }
+                }
+            }
         }
     }
 
