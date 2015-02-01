@@ -170,18 +170,13 @@ inline bool read_cpu(std::vector< pu > &pus, int32_t cpu)
     int32_t socket = read_socket(cpu);
     int32_t core = read_core(cpu);
     
-    if (socket >= 0 && core >= 0)
-    {
-        pu u;
-        u.node = -1;
-        u.native = cpu;
-        u.socket = socket;
-        u.core = core;
-        pus.push_back(u);
-        return true;
-    }
-    
-    return false;
+    pu u;
+    u.node = -1;
+    u.native = cpu;
+    u.socket = socket;
+    u.core = core;
+    pus.push_back(u);
+    return true;
 }
 
 inline bool read_cpu(std::vector< pu > &pus, int32_t node, int32_t cpu)
