@@ -29,7 +29,7 @@ script:
 #  - ./configure && make && make check
   - ./configure && make
 
-after_install:
+after_script:
   - examples/simple_affinity
 
 notifications:
