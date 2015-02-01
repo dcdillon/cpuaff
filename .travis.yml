@@ -29,6 +29,9 @@ script:
   - ./configure && make && make check
 #  - ./configure && make
 
+after_install:
+  - examples/simple_affinity
+
 notifications:
   email:
     on_success: change
