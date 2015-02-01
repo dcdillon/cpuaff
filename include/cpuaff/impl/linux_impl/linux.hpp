@@ -154,6 +154,7 @@ struct get_affinity
             {
                 if (CPU_ISSET(i, &cpu_set))
                 {
+                    std::cerr << "Affinity set to " << i << std::endl;
                     cpus.insert(cpu_identifier_wrapper(i));
                 }
             }
@@ -179,6 +180,7 @@ struct set_affinity
 
         for (; i != iend; ++i)
         {
+            std::cerr << "Setting affinity to " << i->get() << std::endl;
             CPU_SET(i->get(), &cpu_set);
         }
 
