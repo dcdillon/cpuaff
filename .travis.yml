@@ -26,9 +26,7 @@ before_script:
   - if [ $TRAVIS_OS_NAME == linux ]; then ./bootstrap.sh; fi
 
 script: 
-#  - ./configure && make && make check
-  - ./configure && make
-  - ./examples/simple_affinity
+  - ./configure && make && make check
 
 notifications:
   email:
