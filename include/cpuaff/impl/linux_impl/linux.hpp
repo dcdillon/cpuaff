@@ -145,8 +145,6 @@ struct get_affinity
 {
     inline bool operator()(std::set< cpu_identifier_wrapper > &cpus)
     {
-        cpus.clear();
-        
         cpu_set_t cpu_set;
         if (0 == sched_getaffinity(0, sizeof(cpu_set_t), &cpu_set))
         {
@@ -179,7 +177,6 @@ struct set_affinity
 
         for (; i != iend; ++i)
         {
-            std::cerr << "Setting affinity for " << i->get() << std::endl;
             CPU_SET(i->get(), &cpu_set);
         }
 

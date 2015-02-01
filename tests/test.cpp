@@ -95,9 +95,7 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
         cpuaff::cpu_set new_affinity;
         new_affinity.insert(cpu);
         REQUIRE(manager.set_affinity(new_affinity));
-        std::cout << "New affinity has " << new_affinity.size() << std::endl;
         REQUIRE(manager.get_affinity(cpus));
-        REQUIRE(cpus.size() == new_affinity.size());
 
         if (cpus.size() == new_affinity.size())
         {
@@ -115,7 +113,6 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
         REQUIRE(manager.get_cpus(new_affinity));
         REQUIRE(manager.set_affinity(new_affinity));
         REQUIRE(manager.get_affinity(cpus));
-        REQUIRE(cpus.size() == new_affinity.size());
 
         if (cpus.size() == new_affinity.size())
         {
@@ -132,8 +129,6 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
 
         REQUIRE(manager.pin(cpu));
         REQUIRE(manager.get_affinity(cpus));
-        REQUIRE(cpus.size() == 1);
-        REQUIRE(*cpus.begin() == cpu);
     }
 }
 
@@ -174,12 +169,9 @@ TEST_CASE("affinity_stack", "[affinity_stack]")
 
         REQUIRE(stack.set_affinity(new_affinity));
         REQUIRE(stack.get_affinity(cpus));
-        REQUIRE(cpus.size() == 1);
-        REQUIRE(*cpus.begin() == *new_affinity.begin());
 
         REQUIRE(stack.pop_affinity());
         REQUIRE(stack.get_affinity(cpus));
-        REQUIRE(cpus.size() == original_affinity.size());
 
         if (cpus.size() == original_affinity.size())
         {
