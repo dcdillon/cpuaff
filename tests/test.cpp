@@ -30,6 +30,7 @@
 
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
+#include <iostream>
 
 #include "../include/cpuaff/cpuaff.hpp"
 
@@ -94,6 +95,7 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
         cpuaff::cpu_set new_affinity;
         new_affinity.insert(cpu);
         REQUIRE(manager.set_affinity(new_affinity));
+        std::cout << "New affinity has " << new_affinity.size() << std::endl;
         REQUIRE(manager.get_affinity(cpus));
         REQUIRE(cpus.size() == new_affinity.size());
 
