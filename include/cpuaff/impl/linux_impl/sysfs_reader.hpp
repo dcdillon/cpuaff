@@ -36,6 +36,7 @@
 #include <sstream>
 #include <stdint.h>
 #include <dirent.h>
+#include <iostream>
 
 namespace cpuaff
 {
