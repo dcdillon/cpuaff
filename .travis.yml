@@ -28,9 +28,7 @@ before_script:
 script: 
 #  - ./configure && make && make check
   - ./configure && make
-
-after_script:
-  - examples/simple_affinity
+  - ./examples/simple_affinity
 
 notifications:
   email:
