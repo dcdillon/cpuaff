@@ -48,7 +48,7 @@ namespace set_reader
 inline bool read_int_set(std::set< int32_t > &set, const std::string &str)
 {
     set.clear();
-    
+
     std::vector< std::string > elem;
 
     char buf[2048];
@@ -90,7 +90,7 @@ inline bool read_int_set(std::set< int32_t > &set, const std::string &str)
             }
         }
     }
-    
+
     return true;
 }
 }  // namespace set_reader

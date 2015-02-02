@@ -35,11 +35,12 @@ int main(int argc, char *argv[])
 {
 #if defined(CPUAFF_PCI_SUPPORTED)
     cpuaff::affinity_manager manager;
+    cpuaff::pci_device_manager pci_manager;
 
-    if (manager.initialize())
+    if (manager.has_cpus() && pci_manager.has_pci_devices())
     {
         cpuaff::pci_device_set devices;
-        manager.get_pci_devices(devices);
+        pci_manager.get_pci_devices(devices);
 
         cpuaff::pci_name_resolver resolver;
         resolver.initialize("/usr/share/hwdata/pci.ids");
@@ -54,7 +55,12 @@ int main(int argc, char *argv[])
             std::cout << (*i) << " - " << des << std::endl;
 
             cpuaff::cpu_set cpus;
-            manager.get_nearby_cpus(cpus, *i);
+            manager.get_cpus_by_numa(cpus, i->numa());
+
+            if (cpus.empty())
+            {
+                manager.get_cpus(cpus);
+            }
 
             cpuaff::cpu_set::iterator i = cpus.begin();
             cpuaff::cpu_set::iterator iend = cpus.end();

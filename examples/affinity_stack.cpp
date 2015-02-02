@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 {
     cpuaff::affinity_manager manager;
 
-    if (manager.initialize())
+    if (manager.has_cpus())
     {
         cpuaff::affinity_stack stack(manager);
 

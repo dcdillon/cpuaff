@@ -81,6 +81,7 @@
 
 #include "impl/basic_pci_device.hpp"
 #include "impl/basic_pci_device_set.hpp"
+#include "impl/basic_pci_device_manager.hpp"
 #include "pci_device_description.hpp"
 #include "pci_device_spec.hpp"
 #include "pci_name_resolver.hpp"
@@ -134,6 +135,11 @@ typedef impl::basic_cpu_set< traits > cpu_set;
 typedef impl::basic_round_robin_allocator< traits > round_robin_allocator;
 
 #if defined(CPUAFF_PCI_SUPPORTED)
+/*!
+ * basic_pci_device_manager is a collection of all the pci devices on the
+ * system.
+ */
+typedef impl::basic_pci_device_manager< traits > pci_device_manager;
 
 /*!
  * basic_pci_device is a representation of a pci_device on the system.  It

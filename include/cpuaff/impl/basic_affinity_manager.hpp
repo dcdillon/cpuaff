@@ -33,12 +33,6 @@
 #include "../config.hpp"
 #include "basic_cpu.hpp"
 #include "basic_cpu_set.hpp"
-
-#if defined(CPUAFF_PCI_SUPPORTED)
-#include "basic_pci_device.hpp"
-#include "basic_pci_device_set.hpp"
-#endif
-
 #include <cassert>
 #include <map>
 #include <set>
@@ -71,87 +65,11 @@ class basic_affinity_manager
     typedef basic_cpu< TRAITS > cpu_type;
     typedef basic_cpu_set< TRAITS > cpu_set_type;
 
-#if defined(CPUAFF_PCI_SUPPORTED)
-    typedef typename TRAITS::pci_address_type pci_address_type;
-    typedef typename TRAITS::pci_address_wrapper_type pci_address_wrapper_type;
-    typedef typename TRAITS::pci_loader_type pci_loader_type;
-    typedef typename TRAITS::pci_loader_vector_type pci_loader_vector_type;
-
-    typedef basic_pci_device< TRAITS > pci_device_type;
-    typedef basic_pci_device_set< TRAITS > pci_device_set_type;
-#endif
-
    public:
     /*!
      * Construct an uninitialized basic_affinity_manager.
      */
-    inline basic_affinity_manager()
-    {
-        loaded_cpus_ = false;
-
-#if defined(CPUAFF_PCI_SUPPORTED)
-        loaded_pci_ = false;
-#endif
-    }
-
-    /*!
-     * Initialize a basic_affinity_manager.  This reads the hardware layout and
-     * creates the cpu and pci mappings.
-     *
-     * \return true if initialization is successful.  false otherwise.
-     */
-    inline bool initialize()
-    {
-        bool retval = true;
-
-        cpu_loader_vector_type cpus;
-        loaded_cpus_ = cpu_loader_type()(cpus);
-
-        retval = retval && loaded_cpus_;
-        typename cpu_loader_vector_type::iterator i = cpus.begin();
-        typename cpu_loader_vector_type::iterator iend = cpus.end();
-
-        for (; i != iend; ++i)
-        {
-            cpu_type cpu(i->spec, i->id, i->numa);
-            cpus_.insert(cpu);
-            cpu_by_id_[i->id] = cpu;
-            cpu_by_spec_[i->spec] = cpu;
-            cpus_by_numa_[i->numa].insert(cpu);
-            cpus_by_socket_[i->spec.socket()].insert(cpu);
-            cpus_by_core_[i->spec.core()].insert(cpu);
-            cpus_by_processing_unit_[i->spec.processing_unit()].insert(cpu);
-        }
-
-        typename cpu_set_type::iterator j = cpus_.begin();
-        typename cpu_set_type::iterator jend = cpus_.end();
-
-        for (; j != jend; ++j)
-        {
-            cpu_by_index_.push_back(*j);
-        }
-
-#if defined(CPUAFF_PCI_SUPPORTED)
-        pci_loader_vector_type devices;
-        loaded_pci_ = pci_loader_type()(devices);
-        //retval = retval && loaded_pci_;
-
-        typename pci_loader_vector_type::iterator k = devices.begin();
-        typename pci_loader_vector_type::iterator kend = devices.end();
-
-        for (; k != kend; ++k)
-        {
-            pci_device_type device(k->spec, k->address, k->numa);
-            pci_device_by_address_[k->address] = device;
-            pci_devices_.insert(device);
-            pci_devices_by_numa_[k->numa].insert(device);
-            pci_devices_by_spec_[k->spec].insert(device);
-            pci_devices_by_vendor_[k->spec.vendor()].insert(device);
-        }
-#endif
-
-        return retval;
-    }
+    inline basic_affinity_manager() : loaded_cpus_(false) { initialize(); }
 
     /*!
      * Check if this basic_affinity_manager has been successfully initialized
@@ -160,16 +78,6 @@ class basic_affinity_manager
      * \return true if cpu initialization succeeded, false otherwise.
      */
     inline bool has_cpus() const { return loaded_cpus_; }
-
-#if defined(CPUAFF_PCI_SUPPORTED)
-    /*!
-     * Check if this basic_affinity_manager has been successfully initialized
-     * and has cpus defined.
-     *
-     * \return true if cpu initialization succeeded, false otherwise.
-     */
-    inline bool has_pci_devices() const { return loaded_pci_; }
-#endif
 
     /*!
      * Get the cpu with the given identifier.
@@ -324,7 +232,7 @@ class basic_affinity_manager
 
             return !cpus.empty();
         }
-        
+
         return false;
     }
 
@@ -410,169 +318,6 @@ class basic_affinity_manager
         return !cpus.empty();
     }
 
-#if defined(CPUAFF_PCI_SUPPORTED)
-    /*!
-     * Get all the pci devices.
-     *
-     * \param devices [out] the set of pci devices
-     * \return true if devices are found, false otherwise.
-     */
-    inline bool get_pci_devices(pci_device_set_type &devices) const
-    {
-        devices.clear();
-
-        if (has_pci_devices())
-        {
-            devices = pci_devices_;
-        }
-
-        return !devices.empty();
-    }
-
-    /*!
-     * Get the pci device with the given address
-     *
-     * \param device [out] the pci device
-     * \param address [in] the address
-     * \return true if the device is found, false otherwise.
-     */
-    inline bool get_pci_device_for_address(
-        pci_device_type &device, const pci_address_wrapper_type &address)
-    {
-        bool retval = false;
-
-        if (has_pci_devices())
-        {
-            typename std::map< pci_address_wrapper_type,
-                               pci_device_type >::iterator i =
-                pci_device_by_address_.find(address);
-
-            if (i != pci_device_by_address_.end())
-            {
-                device = i->second;
-                retval = true;
-            }
-        }
-
-        return retval;
-    }
-
-    /*!
-     * Get the pci device with the given address
-     *
-     * \param device [out] the pci device
-     * \param address [in] the address
-     * \return true if the device is found, false otherwise.
-     */
-    inline bool get_pci_device_for_address(pci_device_type &device,
-                                           const pci_address_type &address)
-    {
-        return get_pci_device_for_address(device,
-                                          pci_address_wrapper_type(address));
-    }
-
-    /*!
-     * Get the pci devices with the given pci_device_spec
-     *
-     * \param devices [out] the set of pci devices
-     * \param spec [in] the pci_device_spec
-     * \return true if devices are found, false otherwise.
-     */
-    inline bool get_pci_devices_by_spec(pci_device_set_type &devices,
-                                        const pci_device_spec &spec)
-    {
-        devices.clear();
-
-        if (has_pci_devices())
-        {
-            typename std::map< pci_device_spec, pci_device_set_type >::iterator
-                i = pci_devices_by_spec_.find(spec);
-
-            if (i != pci_devices_by_spec_.end())
-            {
-                devices = i->second;
-            }
-        }
-
-        return !devices.empty();
-    }
-
-    /*!
-     * Get the pci devices on the given numa node
-     *
-     * \param devices [out] the set of pci devices
-     * \param numa [in] the numa node identifier
-     * \return true if devices are found, false otherwise.
-     */
-    inline bool get_pci_devices_by_numa(pci_device_set_type &devices,
-                                        const numa_type &numa)
-    {
-        devices.clear();
-
-        if (has_pci_devices())
-        {
-            typename std::map< numa_type, pci_device_set_type >::iterator i =
-                pci_devices_by_numa_.find(numa);
-
-            if (i != pci_devices_by_numa_.end())
-            {
-                devices = i->second;
-            }
-        }
-
-        return !devices.empty();
-    }
-
-    /*!
-     * Get the pci devices with the given vendor
-     *
-     * \param devices [out] the set of pci devices
-     * \param vendor [in] the vendor id
-     * \return true if devices are found, false otherwise.
-     */
-    inline bool get_pci_devices_by_vendor(pci_device_set_type &devices,
-                                          const pci_vendor_id_type &vendor)
-    {
-        devices.clear();
-
-        if (has_pci_devices())
-        {
-            typename std::map< pci_vendor_id_type,
-                               pci_device_set_type >::iterator i =
-                pci_devices_by_vendor_.find(vendor);
-
-            if (i != pci_devices_by_vendor_.end())
-            {
-                devices = i->second;
-            }
-        }
-
-        return !devices.empty();
-    }
-
-    /*!
-     * Get nearby cpus for the given pci_device.  This is the cpus on the same
-     * numa node if available, otherwise it assumes that all cpus are
-     * equidistant because it doesn't have better information.
-     *
-     * \param cpus [out] the set of cpus
-     * \param device [in] the pci_device
-     * \return true if cpus are found, false otherwise.
-     */
-    inline bool get_nearby_cpus(cpu_set_type &cpus,
-                                const pci_device_type &device)
-    {
-        if (device.numa() != -1)
-        {
-            return get_cpus_by_numa(cpus, device.numa());
-        }
-        else
-        {
-            return get_cpus(cpus);
-        }
-    }
-#endif
-
     /*!
      * Get the affinity of the calling thread
      *
@@ -639,6 +384,47 @@ class basic_affinity_manager
     }
 
    private:
+    /*!
+     * Initialize a basic_affinity_manager.  This reads the hardware layout and
+     * creates the cpu and pci mappings.
+     *
+     * \return true if initialization is successful.  false otherwise.
+     */
+    inline bool initialize()
+    {
+        bool retval = true;
+
+        cpu_loader_vector_type cpus;
+        loaded_cpus_ = cpu_loader_type()(cpus);
+
+        retval = retval && loaded_cpus_;
+        typename cpu_loader_vector_type::iterator i = cpus.begin();
+        typename cpu_loader_vector_type::iterator iend = cpus.end();
+
+        for (; i != iend; ++i)
+        {
+            cpu_type cpu(i->spec, i->id, i->numa);
+            cpus_.insert(cpu);
+            cpu_by_id_[i->id] = cpu;
+            cpu_by_spec_[i->spec] = cpu;
+            cpus_by_numa_[i->numa].insert(cpu);
+            cpus_by_socket_[i->spec.socket()].insert(cpu);
+            cpus_by_core_[i->spec.core()].insert(cpu);
+            cpus_by_processing_unit_[i->spec.processing_unit()].insert(cpu);
+        }
+
+        typename cpu_set_type::iterator j = cpus_.begin();
+        typename cpu_set_type::iterator jend = cpus_.end();
+
+        for (; j != jend; ++j)
+        {
+            cpu_by_index_.push_back(*j);
+        }
+
+        return retval;
+    }
+
+   private:
     cpu_set_type cpus_;
     std::vector< cpu_type > cpu_by_index_;
     std::map< cpu_identifier_wrapper_type, cpu_type > cpu_by_id_;
@@ -651,16 +437,6 @@ class basic_affinity_manager
         cpus_by_socket_and_core_;
     std::map< processing_unit_type, cpu_set_type > cpus_by_processing_unit_;
     bool loaded_cpus_;
-
-#if defined(CPUAFF_PCI_SUPPORTED)
-    pci_device_set_type pci_devices_;
-    std::map< numa_type, pci_device_set_type > pci_devices_by_numa_;
-    std::map< pci_device_spec, pci_device_set_type > pci_devices_by_spec_;
-    std::map< pci_address_wrapper_type, pci_device_type >
-        pci_device_by_address_;
-    std::map< pci_vendor_id_type, pci_device_set_type > pci_devices_by_vendor_;
-    bool loaded_pci_;
-#endif
 };
 }  // namespace impl
 }  // namespace cpuaff
@@ -672,36 +448,13 @@ std::ostream &operator<<(
     cpuaff::impl::basic_cpu_set< TRAITS > cpus;
     m.get_cpus(cpus);
 
-    s << "+----------+" << std::endl;
-    s << "| CPU List |" << std::endl;
-    s << "+----------+" << std::endl;
-
     typename cpuaff::impl::basic_cpu_set< TRAITS >::iterator i = cpus.begin();
     typename cpuaff::impl::basic_cpu_set< TRAITS >::iterator iend = cpus.end();
 
     for (; i != iend; ++i)
     {
-        s << "  " << (*i) << std::endl;
+        s << (*i) << std::endl;
     }
 
-#if defined(CPUAFF_PCI_SUPPORTED)
-
-    cpuaff::impl::basic_pci_device_set< TRAITS > devices;
-    m.get_pci_devices(devices);
-
-    s << "+-----------------+" << std::endl;
-    s << "| PCI Device List |" << std::endl;
-    s << "+-----------------+" << std::endl;
-
-    typename cpuaff::impl::basic_pci_device_set< TRAITS >::iterator j =
-        devices.begin();
-    typename cpuaff::impl::basic_pci_device_set< TRAITS >::iterator jend =
-        devices.end();
-
-    for (; j != jend; ++j)
-    {
-        s << "  " << (*j) << std::endl;
-    }
-#endif
     return s;
 }

@@ -34,9 +34,9 @@
 int main(int argc, char *argv[])
 {
 #if defined(CPUAFF_PCI_SUPPORTED)
-    cpuaff::affinity_manager manager;
+    cpuaff::pci_device_manager manager;
 
-    if (manager.initialize())
+    if (manager.has_pci_devices())
     {
         cpuaff::pci_device_set devices;
         manager.get_pci_devices(devices);

@@ -258,7 +258,7 @@ inline bool load_cpus(std::vector< pu > &pus)
                 while ((ent = readdir(dir)) != NULL)
                 {
                     std::string file = ent->d_name;
-                    
+
                     if (file.substr(0, 3) == "cpu")
                     {
                         int32_t cpu = atoi(file.substr(3).c_str());

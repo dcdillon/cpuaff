@@ -34,27 +34,43 @@
 
 #include "../include/cpuaff/cpuaff.hpp"
 
+#if defined(CPUAFF_PCI_SUPPORTED)
+TEST_CASE("pci_device_manager", "[pci_device_manager]")
+{
+    cpuaff::pci_device_manager manager;
+
+    if (manager.has_pci_devices())
+    {
+        cpuaff::pci_device_set devices;
+        cpuaff::pci_device device;
+
+        REQUIRE(manager.get_pci_devices(devices));
+        REQUIRE(!devices.empty());
+
+        device = *devices.begin();
+
+        REQUIRE(
+            manager.get_pci_device_for_address(device, device.address()));
+        REQUIRE(manager.get_pci_device_for_address(device,
+                                                   device.address().get()));
+        REQUIRE(manager.get_pci_devices_by_spec(devices, device.spec()));
+        REQUIRE(manager.get_pci_devices_by_numa(devices, device.numa()));
+        REQUIRE(
+            manager.get_pci_devices_by_vendor(devices, device.vendor()));
+    }
+}
+#endif
+
 TEST_CASE("affinity_manager", "[affinity_manager]")
 {
     cpuaff::affinity_manager manager;
 
-    SECTION("affinity_manager::initialize()")
-    {
-        REQUIRE(manager.initialize());
-        REQUIRE(manager.has_cpus());
-    }
-
     SECTION("affinity_manager member functions")
     {
-        REQUIRE(manager.initialize());
+        REQUIRE(manager.has_cpus());
 
         cpuaff::cpu cpu;
         cpuaff::cpu_set cpus;
-
-#if defined(CPUAFF_PCI_SUPPORTED)
-        cpuaff::pci_device_set devices;
-        cpuaff::pci_device device;
-#endif
 
         REQUIRE(manager.get_cpu_from_index(cpu, 0));
         REQUIRE(manager.get_cpu_from_id(cpu, cpu.id()));
@@ -71,23 +87,6 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
             manager.get_cpus_by_processing_unit(cpus, cpu.processing_unit()));
         REQUIRE(manager.get_cpus_by_socket_and_core(
             cpus, cpu.socket(), cpu.core()));
-
-#if defined(CPUAFF_PCI_SUPPORTED)
-        if (manager.has_pci_devices())
-        {
-            REQUIRE(manager.get_pci_devices(devices));
-            device = *devices.begin();
-            REQUIRE(manager.get_pci_device_for_address(device, device.address()));
-            REQUIRE(
-                manager.get_pci_device_for_address(device, device.address().get()));
-            REQUIRE(manager.get_pci_devices_by_spec(
-                devices,
-                cpuaff::pci_device_spec(device.vendor(), device.device())));
-            REQUIRE(manager.get_pci_devices_by_numa(devices, device.numa()));
-            REQUIRE(manager.get_pci_devices_by_vendor(devices, device.vendor()));
-            REQUIRE(manager.get_nearby_cpus(cpus, device));
-        }
-#endif
 
         REQUIRE(manager.get_affinity(cpus));
         REQUIRE(cpus.size() > 0);
@@ -138,7 +137,7 @@ TEST_CASE("affinity_stack", "[affinity_stack]")
     {
         cpuaff::affinity_manager manager;
 
-        REQUIRE(manager.initialize());
+        REQUIRE(manager.has_cpus());
 
         cpuaff::affinity_stack stack(manager);
 
@@ -194,7 +193,7 @@ TEST_CASE("round_robin_allocator", "[round_robin_allocator]")
     {
         cpuaff::affinity_manager manager;
 
-        REQUIRE(manager.initialize());
+        REQUIRE(manager.has_cpus());
 
         cpuaff::round_robin_allocator allocator;
         cpuaff::cpu_set cpus;
@@ -227,7 +226,7 @@ TEST_CASE("native_cpu_mapper", "[native_cpu_mapper]")
     {
         cpuaff::affinity_manager manager;
 
-        REQUIRE(manager.initialize());
+        REQUIRE(manager.has_cpus());
 
         cpuaff::native_cpu_mapper mapper;
 
