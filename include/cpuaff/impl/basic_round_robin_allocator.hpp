@@ -54,10 +54,49 @@ class basic_round_robin_allocator
 
    public:
     /*!
-     * Constructs an uninitialized basic_round_robin_allocator.
+     * Constructs a basic_round_robin_allocator with the given set of cpus.
+     *
+     * \param cpus the set of cpus that this allocator should iterate over
      */
-    inline basic_round_robin_allocator() {}
+    inline basic_round_robin_allocator(const cpu_set_type &cpus)
+    {
+        initialize(cpus);
+    }
 
+    /*!
+     * Get the next cpu in the round-robin.
+     *
+     * \return the next cpu in the round robin
+     */
+    inline cpu_type allocate()
+    {
+        cpu_type retval = cpu_queue_.front();
+        cpu_queue_.pop();
+        cpu_queue_.push(retval);
+        return retval;
+    }
+
+    /*!
+     * Get the next count cpus in the round-robin.
+     *
+     * \param cpus [out] the set of the next count cpus in the round-robin
+     * \param count [in] the number of cpus to return.  If this number is
+     *                   greater than the total number of cpus in the
+     *                   round-robin just the full set will be returned.
+     */
+    inline bool allocate(cpu_set_type &cpus, uint32_t count)
+    {
+        cpus.clear();
+
+        for (uint32_t i = 0; i < count; ++i)
+        {
+            cpus.insert(allocate());
+        }
+
+        return true;
+    }
+
+   private:
     /*!
      * Initializes a basic_round_robin_allocator with the given set of cpus.
      *
@@ -93,39 +132,6 @@ class basic_round_robin_allocator
         }
 
         return !!cpus.size();
-    }
-
-    /*!
-     * Get the next cpu in the round-robin.
-     *
-     * \return the next cpu in the round robin
-     */
-    inline cpu_type allocate()
-    {
-        cpu_type retval = cpu_queue_.front();
-        cpu_queue_.pop();
-        cpu_queue_.push(retval);
-        return retval;
-    }
-
-    /*!
-     * Get the next count cpus in the round-robin.
-     *
-     * \param cpus [out] the set of the next count cpus in the round-robin
-     * \param count [in] the number of cpus to return.  If this number is
-     *                   greater than the total number of cpus in the
-     *                   round-robin just the full set will be returned.
-     */
-    inline bool allocate(cpu_set_type &cpus, uint32_t count)
-    {
-        cpus.clear();
-
-        for (uint32_t i = 0; i < count; ++i)
-        {
-            cpus.insert(allocate());
-        }
-
-        return true;
     }
 
    private:
