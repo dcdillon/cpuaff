@@ -324,6 +324,8 @@ class basic_affinity_manager
 
             return !cpus.empty();
         }
+        
+        return false;
     }
 
     /*!
