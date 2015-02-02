@@ -49,14 +49,12 @@ TEST_CASE("pci_device_manager", "[pci_device_manager]")
 
         device = *devices.begin();
 
+        REQUIRE(manager.get_pci_device_for_address(device, device.address()));
         REQUIRE(
-            manager.get_pci_device_for_address(device, device.address()));
-        REQUIRE(manager.get_pci_device_for_address(device,
-                                                   device.address().get()));
+            manager.get_pci_device_for_address(device, device.address().get()));
         REQUIRE(manager.get_pci_devices_by_spec(devices, device.spec()));
         REQUIRE(manager.get_pci_devices_by_numa(devices, device.numa()));
-        REQUIRE(
-            manager.get_pci_devices_by_vendor(devices, device.vendor()));
+        REQUIRE(manager.get_pci_devices_by_vendor(devices, device.vendor()));
     }
 }
 #endif
