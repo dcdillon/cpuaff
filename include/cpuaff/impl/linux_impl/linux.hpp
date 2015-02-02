@@ -172,8 +172,8 @@ struct set_affinity
         cpu_set_t cpu_set;
         CPU_ZERO(&cpu_set);
 
-        typename std::set< cpu_identifier_wrapper >::iterator i = cpus.begin();
-        typename std::set< cpu_identifier_wrapper >::iterator iend = cpus.end();
+        std::set< cpu_identifier_wrapper >::iterator i = cpus.begin();
+        std::set< cpu_identifier_wrapper >::iterator iend = cpus.end();
 
         for (; i != iend; ++i)
         {
