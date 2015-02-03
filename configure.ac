@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.63])
-AC_INIT(cpuaff,0.0.2,dcdillon@gmail.com,cpuaff)
+AC_INIT(cpuaff,0.0.3,dcdillon@gmail.com,cpuaff)
 AM_INIT_AUTOMAKE
 AC_OUTPUT(Makefile include/Makefile examples/Makefile tests/Makefile)
 AC_CONFIG_HEADERS([config.h])
