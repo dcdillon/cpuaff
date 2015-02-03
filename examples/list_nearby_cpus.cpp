@@ -42,8 +42,7 @@ int main(int argc, char *argv[])
         cpuaff::pci_device_set devices;
         pci_manager.get_pci_devices(devices);
 
-        cpuaff::pci_name_resolver resolver;
-        resolver.initialize("/usr/share/hwdata/pci.ids");
+        cpuaff::pci_name_resolver resolver("/usr/share/hwdata/pci.ids");
 
         cpuaff::pci_device_set::iterator i = devices.begin();
         cpuaff::pci_device_set::iterator iend = devices.end();

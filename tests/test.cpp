@@ -198,7 +198,7 @@ TEST_CASE("round_robin_allocator", "[round_robin_allocator]")
         cpuaff::cpu cpu;
 
         REQUIRE(manager.get_cpus(cpus));
-        
+
         cpuaff::round_robin_allocator allocator(cpus);
 
         for (int i = 0; i < cpus.size() * 2; ++i)

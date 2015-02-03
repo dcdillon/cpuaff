@@ -43,6 +43,62 @@ class pci_name_resolver
 {
    public:
     /*!
+     * Constructs a pci_name_resolver with the given file.  The given file
+     * should be a pci.ids file from the
+     * (PCI ID Project)[http://pci-ids.ucw.cz].
+     *
+     * \param file the file name to read
+     */
+    inline pci_name_resolver(const std::string &file) { initialize(file); }
+
+    /*!
+     * Get the pci_device_description for the given pci_device_spec.
+     *
+     * \param des [out] the pci_device_description
+     * \param spec [in] the pci_device_spec
+     * \return true if the description can be found, false otherwise.
+     */
+    inline bool get_description(pci_device_description &des,
+                                const pci_device_spec &spec)
+    {
+        std::map< pci_device_spec, pci_device_description >::iterator i =
+            description_by_id_.find(spec);
+
+        if (i != description_by_id_.end())
+        {
+            des = i->second;
+            return true;
+        }
+        else
+        {
+            i = description_by_id_.find(pci_device_spec(spec.vendor(), 0));
+
+            if (i != description_by_id_.end())
+            {
+                des = i->second;
+                std::ostringstream buf;
+                buf << std::hex << std::setfill('0') << std::setw(4)
+                    << spec.device();
+                des.device_description(buf.str());
+                return true;
+            }
+            else
+            {
+                std::ostringstream buf;
+                buf << std::hex << std::setfill('0') << std::setw(4)
+                    << spec.vendor();
+                des.vendor_description(buf.str());
+                buf.str("");
+                buf << std::hex << std::setfill('0') << std::setw(4)
+                    << spec.device();
+                des.device_description(buf.str());
+                return true;
+            }
+        }
+    }
+
+   private:
+    /*!
      * Initializes a pci_name_resolver with the given file.  The given file
      * should be a pci.ids file from the
      * (PCI ID Project)[http://pci-ids.ucw.cz].
@@ -108,53 +164,6 @@ class pci_name_resolver
         return retval;
     }
 
-    /*!
-     * Get the pci_device_description for the given pci_device_spec.
-     *
-     * \param des [out] the pci_device_description
-     * \param spec [in] the pci_device_spec
-     * \return true if the description can be found, false otherwise.
-     */
-    inline bool get_description(pci_device_description &des,
-                                const pci_device_spec &spec)
-    {
-        std::map< pci_device_spec, pci_device_description >::iterator i =
-            description_by_id_.find(spec);
-
-        if (i != description_by_id_.end())
-        {
-            des = i->second;
-            return true;
-        }
-        else
-        {
-            i = description_by_id_.find(pci_device_spec(spec.vendor(), 0));
-
-            if (i != description_by_id_.end())
-            {
-                des = i->second;
-                std::ostringstream buf;
-                buf << std::hex << std::setfill('0') << std::setw(4)
-                    << spec.device();
-                des.device_description(buf.str());
-                return true;
-            }
-            else
-            {
-                std::ostringstream buf;
-                buf << std::hex << std::setfill('0') << std::setw(4)
-                    << spec.vendor();
-                des.vendor_description(buf.str());
-                buf.str("");
-                buf << std::hex << std::setfill('0') << std::setw(4)
-                    << spec.device();
-                des.device_description(buf.str());
-                return true;
-            }
-        }
-    }
-
-   private:
     inline bool parse_vendor(const std::string &line,
                              int32_t &vendor,
                              std::string &vendor_description)
