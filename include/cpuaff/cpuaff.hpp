@@ -30,43 +30,6 @@
 
 #pragma once
 
-/*!
- * \mainpage
- * ### Description
- *
- * cpuaff is a C++ library that abstracts CPU affinity settings for multiple
- * platforms.
- *
- * ### Details
- *
- * cpuaff builds up a four part view of every processor on a system.  CPUs are
- * identified by their socket, core, and processing_unit.  Additionally each cpu
- * on the system has a notion of its NUMA node.  This allows a developer to
- * select the CPUs at runtime that achieve the performance goals of his/her
- * application.
- *
- * cpuaff aims to eventually be completely header-only for easy integration into
- * existing systems.  For the time being the Linux implementation is
- * header-only.  Other platforms are implemented using
- * [hwloc](http://www.open-mpi.org/projects/hwloc/) as an interface to the
- * underlying hardware so executables must link to
- * [hwloc](http://www.open-mpi.org/projects/hwloc/).
- *
- * ### Rationale
- *
- * Managing the CPU affinity of threads within a process is a powerful tool, but
- * operating system provided interfaces are often difficult to use and hard to
- * understand.  To this end, I have created cpuaff which will give an abstract
- * view of the CPUs on a given machine and an easy to use interface to get/set
- * them within a process.
- *
- * ### Licensing
- *
- * cpuaff is distributed under the
- * [New BSD](http://opensource.org/licenses/BSD-3-Clause) (or BSD 3-Clause)
- *license.
- */
-
 #include "config.hpp"
 
 #include "cpu_spec.hpp"
