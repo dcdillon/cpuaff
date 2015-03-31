@@ -108,7 +108,7 @@ class pci_device_description
 };
 }  // namespace cpuaff
 
-std::ostream &operator<<(std::ostream &s,
+inline std::ostream &operator<<(std::ostream &s,
                          const cpuaff::pci_device_description &dev)
 {
     s << dev.vendor_description() << ":" << dev.device_description();
