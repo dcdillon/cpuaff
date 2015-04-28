@@ -89,7 +89,7 @@ typedef impl::basic_native_cpu_mapper< traits > native_cpu_mapper;
  * native_cpu_wrapper is a wrapper for the native representation of cpus.
  * It is comparable with < so that it can be used as a key in maps.
  */
-typedef traits::native_cpu_mapper_type native_cpu_mapper;
+typedef traits::native_cpu_wrapper_type native_cpu_wrapper;
 
 /*!
  * A set that can hold unique cpus.
