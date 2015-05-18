@@ -73,7 +73,7 @@ inline bool read_list(std::set< int32_t > &set, const std::string &_file)
 
 inline bool read_nodes(std::set< int32_t > &nodes)
 {
-    return read_list(nodes, "/sys/devices/system/node/has_cpu");
+    return read_list(nodes, "/sys/devices/system/node/online");
 }
 
 inline bool read_cpus(std::set< int32_t > &cpus, int32_t node)
@@ -85,7 +85,7 @@ inline bool read_cpus(std::set< int32_t > &cpus, int32_t node)
 
 inline bool read_cpus(std::set< int32_t > &cpus)
 {
-    return read_list(cpus, "/sys/devices/system/cpu/possible");
+    return read_list(cpus, "/sys/devices/system/cpu/online");
 }
 
 inline int32_t read_socket(int32_t cpu)
