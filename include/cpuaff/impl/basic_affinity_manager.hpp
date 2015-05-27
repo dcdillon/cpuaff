@@ -33,7 +33,6 @@
 #include "../config.hpp"
 #include "basic_cpu.hpp"
 #include "basic_cpu_set.hpp"
-#include <cassert>
 #include <map>
 #include <set>
 
@@ -339,7 +338,7 @@ class basic_affinity_manager
             for (; i != iend; ++i)
             {
                 cpu_type cpu;
-                assert(get_cpu_from_id(cpu, *i));
+                get_cpu_from_id(cpu, *i);
                 cpus.insert(cpu);
             }
 
