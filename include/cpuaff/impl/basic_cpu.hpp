@@ -148,6 +148,12 @@ class basic_cpu
 };
 }  // namespace impl
 }  // namespace cpuaff
+   /*!
+    * Stream operator
+    *
+    * \print id, numa, socket, core, processing unit
+    *
+    */
 
 template < typename TRAITS >
 std::ostream &operator<<(std::ostream &s,

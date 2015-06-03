@@ -96,6 +96,8 @@ class basic_round_robin_allocator
         return true;
     }
 
+    inline int size() { return cpu_queue_.size(); }
+
    private:
     /*!
      * Initializes a basic_round_robin_allocator with the given set of cpus.

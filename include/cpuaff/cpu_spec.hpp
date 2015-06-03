@@ -31,6 +31,10 @@
 #pragma once
 
 #include "fwd.hpp"
+#include <string>
+#include <iostream>
+#include <stdlib.h>
+#include <sstream>
 
 namespace cpuaff
 {
@@ -63,6 +67,21 @@ class cpu_spec
     }
 
    public:
+    /*!
+     * Parse a string into a cpu_spec
+     *
+     * \param rhs the string to parse
+     *
+     * \return a cpu_spec parsed from the string
+     */
+    static inline cpu_spec parse(const std::string &rhs)
+    {
+        std::istringstream buf(rhs);
+        cpu_spec spec;
+        buf >> spec;
+        return spec;
+    }
+
     /*!
      * Get the zero based socket identifier for this cpu_spec.
      *
@@ -156,6 +175,32 @@ class cpu_spec
     {
         return (socket_ == rhs.socket_ && core_ == rhs.core_ &&
                 processing_unit_ == rhs.processing_unit_);
+    }
+    /*!
+    *  Stream in operator
+    *
+    * \parse a string triplet of socket,core,processing_unit into a cpu spec
+    */
+    friend inline std::istream &operator>>(std::istream &s, cpu_spec &rhs)
+    {
+        s >> rhs.socket_;
+        s.get();
+        s >> rhs.core_;
+        s.get();
+        s >> rhs.processing_unit_;
+
+        return s;
+    }
+    /*!
+    *  Stream out operator
+    *
+    * \ stream out socket,core,processing_unit
+    */
+
+    friend inline std::ostream &operator<<(std::ostream &s, const cpu_spec &rhs)
+    {
+        s << rhs.socket_ << "," << rhs.core_ << "," << rhs.processing_unit_;
+        return s;
     }
 
    private:
