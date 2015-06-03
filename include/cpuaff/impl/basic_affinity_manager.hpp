@@ -339,7 +339,7 @@ class basic_affinity_manager
             for (; i != iend; ++i)
             {
                 cpu_type cpu;
-                assert(get_cpu_from_id(cpu, *i));
+                get_cpu_from_id(cpu, *i);
                 cpus.insert(cpu);
             }
 

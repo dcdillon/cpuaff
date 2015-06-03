@@ -97,6 +97,12 @@ typedef traits::native_cpu_wrapper_type native_cpu_wrapper;
 typedef impl::basic_cpu_set< traits > cpu_set;
 
 /*!
+ *  a set that can hold unique cpu_specs
+ */
+
+typedef std::set< cpu_spec > cpu_spec_set;
+
+/*!
  * round_robin_allocator is a utility class that takes a set of cpus
  * and returns them as requested in a round-robin fashion.  It organizes the
  * cpus such that it returns consecutive cpus from different cores if it can.
