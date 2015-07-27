@@ -1,0 +1,31 @@
+#!/bin/bash
+
+SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+pushd $SCRIPTDIR
+
+pushd ..
+
+./cleanup.sh
+./bootstrap.sh
+./configure
+make dist
+
+mkdir deb
+pushd deb
+
+cp ../cpuaff*.tar.gz .
+VERSION=`ls cpuaff*tar.gz | grep -Po '[0-9]+\.[0-9]+\.[0-9]+'`
+mv cpuaff-$VERSION.tar.gz libcpuaff-dev_$VERSION.orig.tar.gz
+tar -xzf libcpuaff-dev_$VERSION.orig.tar.gz
+pushd cpuaff-$VERSION
+
+debuild -uc -us
+
+popd
+
+popd
+
+popd
+
+popd

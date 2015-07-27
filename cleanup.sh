@@ -21,3 +21,7 @@ rm -rf Makefile.in \
     tests/Makefile.in \
     examples/Makefile.in \
     include/Makefile.in
+
+## remove (maybe) some other generated files
+rm -rf deb
+rm -rf cpuaff*.tar.gz
