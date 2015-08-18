@@ -6,7 +6,7 @@ Standards-Version: 3.9.6
 Build-Depends: debhelper (>= 9)
 
 Package: libcpuaff-dev
-Architecture: any
+Architecture: all
 Depends: ${misc:Depends}
 Description: C++ header only library for managing CPU affinity.
  cpuaff provides an interface to cpu affinity management that
