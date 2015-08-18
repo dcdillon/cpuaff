@@ -1,3 +1,4 @@
-libcpuaff-dev (1.0.0-1) UNRELEASED; urgency=medium
-  * Initial release
- -- Daniel C. Dillon <dcdillon@gmail.com>  Sun, 26 Jul 2015 16:33:05 -0500
+libcpuaff-dev (1.0.0-1) stable; urgency=medium
+  * Initial release * 
+
+ -- Daniel C. Dillon <dcdillon@gmail.com>  Tue, 18 Aug 2015 12:09:11 -0500
