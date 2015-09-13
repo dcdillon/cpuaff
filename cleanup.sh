@@ -25,3 +25,4 @@ rm -rf Makefile.in \
 ## remove (maybe) some other generated files
 rm -rf deb
 rm -rf cpuaff*.tar.gz
+rm -rf deb.*

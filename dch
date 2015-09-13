@@ -1,0 +1,16 @@
+#!/bin/bash
+
+VERSION=""
+
+while getopts "v:" opt; do
+    case $opt in
+        v)
+            VERSION=$OPTARG
+            shift 2
+            ;;
+    esac
+done
+
+dch -v $VERSION~vivid -c debian.vivid/changelog -D vivid $*
+dch -v $VERSION~trusty -c debian.trusty/changelog -D trusty $*
+dch -v $VERSION~precise -c debian.precise/changelog -D precise $*
