@@ -11,6 +11,7 @@ while getopts "v:" opt; do
     esac
 done
 
+dch -v $VERSION -c debian.debian/changelog -D unstable $*
 dch -v $VERSION~vivid -c debian.vivid/changelog -D vivid $*
 dch -v $VERSION~trusty -c debian.trusty/changelog -D trusty $*
 dch -v $VERSION~precise -c debian.precise/changelog -D precise $*
