@@ -1,0 +1,11 @@
+libcpuaff (1.0.2-1) unstable; urgency=medium
+
+  * Working on first launchpad build
+
+ -- Daniel C. Dillon <dcdillon@gmail.com>  Sun, 13 Sep 2015 15:46:31 -0500
+
+libcpuaff (1.0.2-0) unstable; urgency=low
+
+  * Initial release
+
+ -- Daniel C. Dillon <dcdillon@gmail.com>  Sun, 13 Sep 2015 15:21:04 -0500
