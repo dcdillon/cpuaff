@@ -1,3 +1,9 @@
+libcpuaff (1.0.3-1) unstable; urgency=medium
+
+  * Fixing launchpad builds
+
+ -- Daniel C. Dillon <dcdillon@gmail.com>  Mon, 21 Sep 2015 12:57:31 -0500
+
 libcpuaff (1.0.2-1) unstable; urgency=medium
 
   * Working on first launchpad build
