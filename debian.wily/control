@@ -1,0 +1,14 @@
+Source: libcpuaff
+Priority: optional
+Maintainer: Daniel C. Dillon <dcdillon@gmail.com>
+Build-Depends: debhelper (>= 9), autotools-dev
+Standards-Version: 3.9.6
+Section: libs
+
+Package: libcpuaff-dev
+Section: libdevel
+Architecture: any
+Depends: ${misc:Depends}
+Description: C++ header-only library for managing CPU affinity.
+ cpuaff provides an interface to cpu affinity management that
+ addresses cores by numa, socket, core, and processing unit.

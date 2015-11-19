@@ -1,3 +1,9 @@
+libcpuaff (1.0.4-1~precise) precise; urgency=medium
+
+  * Configuring for wily
+
+ -- Daniel C. Dillon <dcdillon@gmail.com>  Thu, 19 Nov 2015 06:17:44 -0600
+
 libcpuaff (1.0.3-1~precise) precise; urgency=medium
 
   * Fixing launchpad builds

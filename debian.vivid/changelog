@@ -1,3 +1,9 @@
+libcpuaff (1.0.4-1~vivid) vivid; urgency=medium
+
+  * Configuring for wily
+
+ -- Daniel C. Dillon <dcdillon@gmail.com>  Thu, 19 Nov 2015 06:17:43 -0600
+
 libcpuaff (1.0.3-1~vivid) vivid; urgency=medium
 
   * Fixing launchpad builds

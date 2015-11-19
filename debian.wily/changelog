@@ -1,0 +1,11 @@
+libcpuaff (1.0.4-1~wily) wily; urgency=medium
+
+  * Configuring for wily
+
+ -- Daniel C. Dillon <dcdillon@gmail.com>  Thu, 19 Nov 2015 06:17:42 -0600
+
+libcpuaff (1.0.2-0) unstable; urgency=low
+
+  * Initial release
+
+ -- Daniel C. Dillon <dcdillon@gmail.com>  Sun, 13 Sep 2015 15:21:04 -0500

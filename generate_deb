@@ -41,7 +41,7 @@ while getopts "S" opt; do
 done
 
 if [ $# -eq 0 ]; then
-    DISTS="debian vivid trusty precise"
+    DISTS="debian wily vivid trusty precise"
 else
     DISTS=$*
 fi
