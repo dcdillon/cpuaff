@@ -1,3 +1,9 @@
+libcpuaff (1.0.5-0) unstable; urgency=medium
+
+  * Version
+
+ -- Daniel C. Dillon <dcdillon@gmail.com>  Fri, 06 May 2016 10:49:59 -0500
+
 libcpuaff (1.0.4-1) unstable; urgency=medium
 
   * Configuring for wily
