@@ -39,6 +39,8 @@
 
 #include <hwloc.h>
 #include <iostream>
+#include <cstdio>
+
 namespace cpuaff
 {
 namespace impl
@@ -214,9 +216,9 @@ struct set_affinity
         hwloc_cpuset_t cpu_set = hwloc_bitmap_alloc();
         hwloc_bitmap_zero(cpu_set);
 
-        typename std::set< cpu_identifier_wrapper >::const_iterator i =
+        std::set< cpu_identifier_wrapper >::const_iterator i =
             cpus.begin();
-        typename std::set< cpu_identifier_wrapper >::const_iterator iend =
+        std::set< cpu_identifier_wrapper >::const_iterator iend =
             cpus.end();
 
         for (; i != iend; ++i)
@@ -227,6 +229,8 @@ struct set_affinity
         bool retval = (0 == hwloc_set_cpubind(topology::instance().get(),
                                               cpu_set, HWLOC_CPUBIND_THREAD));
         hwloc_bitmap_free(cpu_set);
+        
+        return retval;
     }
 };
 

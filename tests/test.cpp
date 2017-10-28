@@ -65,6 +65,10 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
 
     SECTION("affinity_manager member functions")
     {
+#ifdef CPUAFF_USE_HWLOC
+        WARN("Using hwloc library.");
+#endif
+
         REQUIRE(manager.has_cpus());
 
         cpuaff::cpu first_cpu;
@@ -326,7 +330,7 @@ TEST_CASE("round_robin_allocator", "[round_robin_allocator]")
 
         cpuaff::round_robin_allocator allocator(cpus);
 
-        for (int i = 0; i < cpus.size() * 2; ++i)
+        for (std::size_t i = 0; i < cpus.size() * 2; ++i)
         {
             cpu = allocator.allocate();
             bool test = cpu.socket() >= 0 && cpu.core() >= 0 &&
