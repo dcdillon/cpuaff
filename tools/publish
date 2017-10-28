@@ -40,7 +40,7 @@ for DIST in $*; do
 
     CHANGES=`ls *.changes | tail -1`
     debsign $CHANGES
-    echo dput ppa:dcdillon/ppa $CHANGES
+    dput ppa:dcdillon/ppa $CHANGES
 
     popd
 done
