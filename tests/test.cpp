@@ -80,6 +80,7 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
             cpuaff::cpu cpu;
             REQUIRE(manager.get_cpu_from_id(cpu, first_cpu.id()));
             REQUIRE(cpu == first_cpu);
+            WARN(first_cpu << " == " << cpu);
         }
         
         // We can get this came CPU by its raw native id
@@ -87,6 +88,7 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
             cpuaff::cpu cpu;
             REQUIRE(manager.get_cpu_from_id(cpu, first_cpu.id().get()));
             REQUIRE(cpu == first_cpu);
+            WARN(first_cpu << " == " << cpu);
         }
         
         // We can get this same CPU by its cpu_spec
@@ -95,13 +97,16 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
             REQUIRE(manager.get_cpu_from_spec(
                 cpu,
                 cpuaff::cpu_spec(first_cpu.socket(), first_cpu.core(), first_cpu.processing_unit())));
+            WARN(first_cpu << " == " << cpu);
         }
 
         // We can get all the CPUs
         {
             cpuaff::cpu_set cpus;
             REQUIRE(manager.get_cpus(cpus));
-            REQUIRE(!cpus.empty() > 0);
+            REQUIRE(!cpus.empty());
+            
+            WARN("All cpus: " << cpus);
         }
         
         // We can get all the CPUs for the NUMA of the first CPU
@@ -109,6 +114,8 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
             cpuaff::cpu_set cpus;
             REQUIRE(manager.get_cpus_by_numa(cpus, first_cpu.numa()));
             REQUIRE(!cpus.empty());
+            
+            WARN("NUMA cpus: " << cpus);
         }
         
         // We can get all the CPUs for the socket of the first CPU
@@ -116,6 +123,8 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
             cpuaff::cpu_set cpus;
             REQUIRE(manager.get_cpus_by_socket(cpus, first_cpu.socket()));
             REQUIRE(!cpus.empty());
+            
+            WARN("Socket cpus: " << cpus);
         }
         
         // We can get all the CPUs with the same core as the first CPU
@@ -123,6 +132,8 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
             cpuaff::cpu_set cpus;
             REQUIRE(manager.get_cpus_by_core(cpus, first_cpu.core()));
             REQUIRE(!cpus.empty());
+            
+            WARN("Core cpus: " << cpus);
         }
         
         // We can get all the CPUs with the same processing unit as the first
@@ -132,6 +143,8 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
             REQUIRE(
                 manager.get_cpus_by_processing_unit(cpus, first_cpu.processing_unit()));
             REQUIRE(!cpus.empty());
+            
+            WARN("Processing uint cpus: " << cpus);
         }
         
         // We can get all the CPUs on the same socket and core as the first cpu
@@ -140,6 +153,8 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
             REQUIRE(manager.get_cpus_by_socket_and_core(cpus, first_cpu.socket(),
                                                         first_cpu.core()));
             REQUIRE(!cpus.empty());
+            
+            WARN("Socket/core cpus: " << cpus);
         }
 
         // We can get the affinity of the current thread
@@ -147,6 +162,8 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
             cpuaff::cpu_set cpus;
             REQUIRE(manager.get_affinity(cpus));
             REQUIRE(!cpus.empty());
+            
+            WARN("Current affinity: " << cpus);
         }
 
         // We can set the affinity of the current thread
@@ -156,6 +173,8 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
             
             new_affinity.insert(first_cpu);
             
+            WARN("Setting affinity to: " << new_affinity);
+            
             REQUIRE(manager.set_affinity(new_affinity));
             REQUIRE(manager.get_affinity(cpus));
 
@@ -170,6 +189,8 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
                 REQUIRE((*i) == (*j));
             }
 #endif
+
+            WARN("Affinity is: " << cpus);
         }
 
         // We can set the affinity of the current thread back to all cpus
@@ -179,6 +200,8 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
             
             REQUIRE(manager.get_cpus(new_affinity));
             
+            WARN("Setting affinity to: " << new_affinity);
+            
             REQUIRE(manager.set_affinity(new_affinity));
             REQUIRE(manager.get_affinity(cpus));
 
@@ -193,11 +216,15 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
                 REQUIRE((*i) == (*j));
             }
 #endif
+
+            WARN("Affinity is: " << cpus);
         }
 
         // We can pin the affinity of the current thread to a particular CPU
         {
             cpuaff::cpu_set cpus;
+            
+            WARN("Setting affinity to: " << first_cpu);
             
             REQUIRE(manager.pin(first_cpu));
             REQUIRE(manager.get_affinity(cpus));
@@ -206,6 +233,8 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
             REQUIRE(cpus.size() == 1);
             REQUIRE(*cpus.begin() == first_cpu);
 #endif
+
+            WARN("Affinty is: " << cpus);
         }
     }
 }

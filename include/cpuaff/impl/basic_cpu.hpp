@@ -141,6 +141,21 @@ class basic_cpu
         return spec_ == rhs.spec_;
     }
 
+    /*!
+     * Stream operator
+     *
+     * Print [id, numa, socket, core, processing unit]
+     *
+     */
+    friend std::ostream &operator<<(std::ostream &s,
+                         const basic_cpu &cpu)
+    {
+        s << "[id: " << cpu.id().get() << ", numa: " << cpu.numa()
+          << ", socket: " << cpu.socket() << ", core: " << cpu.core()
+          << ", processing_unit: " << cpu.processing_unit() << "]";
+        return s;
+    }
+
    private:
     cpu_spec spec_;
     cpu_identifier_wrapper_type id_;
@@ -148,20 +163,3 @@ class basic_cpu
 };
 }  // namespace impl
 }  // namespace cpuaff
-
-/*!
-* Stream operator
-*
-* Print [id, numa, socket, core, processing unit]
-*
-*/
-
-template < typename TRAITS >
-std::ostream &operator<<(std::ostream &s,
-                         const cpuaff::impl::basic_cpu< TRAITS > &cpu)
-{
-    s << "[id: " << cpu.id().get() << ", numa: " << cpu.numa()
-      << ", socket: " << cpu.socket() << ", core: " << cpu.core()
-      << ", processing_unit: " << cpu.processing_unit() << "]";
-    return s;
-}
