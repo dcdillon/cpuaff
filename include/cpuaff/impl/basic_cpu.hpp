@@ -147,8 +147,7 @@ class basic_cpu
      * Print [id, numa, socket, core, processing unit]
      *
      */
-    friend std::ostream &operator<<(std::ostream &s,
-                         const basic_cpu &cpu)
+    friend std::ostream &operator<<(std::ostream &s, const basic_cpu &cpu)
     {
         s << "[id: " << cpu.id().get() << ", numa: " << cpu.numa()
           << ", socket: " << cpu.socket() << ", core: " << cpu.core()
