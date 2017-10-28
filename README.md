@@ -4,21 +4,19 @@
 
 cpuaff is a C++ library that abstracts CPU affinity settings for multiple platforms.  It is a header-only library on some platforms.  Other platforms are supported using [hwloc](http://www.open-mpi.org/projects/hwloc/).  The project aims to fully support all platforms as header-only eventually.
 
-For a more detailed description of cpuaff, click [here](details.html)
+For a more detailed description of cpuaff, click [here](http://dcdillon.github.io/cpuaff/details.html)
 
-To see a list of supported platforms click [here](supported_platforms.html).
+To see a list of supported platforms click [here](http://dcdillon.github.io/cpuaff/supported_platforms.html).
 
 ### Releases
 
-The latest source release is [cpuaff-1.0.2](releases/cpuaff-1.0.2.tar.gz).
+The latest source release is [cpuaff-1.0.2](http://dcdillon.github.io/cpuaff/releases/cpuaff-1.0.2.tar.gz).
 
 The latest Ubuntu pacakges are available from [ppa:dcdillon/ppa](https://launchpad.net/~dcdillon/+archive/ubuntu/ppa).
 
-To get other releases, go to the [downloads](downloads.html) page.
+To get other releases, go to the [downloads](http://dcdillon.github.io/cpuaff/downloads.html) page.
 
-For installation instructions, click [here](installation.html)
-
-To get a snapshot of the repository, click one of the download links on this page.
+For installation instructions, click [here](http://dcdillon.github.io/cpuaff/installation.html)
 
 ### Simple Example
 
