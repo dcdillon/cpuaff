@@ -1,7 +1,7 @@
 #!/bin/bash
 
 VERSION=`cat configure.ac | grep AC_INIT | grep -Po [0-9]+\.[0-9]+\.[0-9]+`
-DISTS="debian artful zesty yakkety xenial trusty"
+DISTS="debian artful zesty xenial trusty"
 
 for DIST in $DISTS; do
     ARGS=""
