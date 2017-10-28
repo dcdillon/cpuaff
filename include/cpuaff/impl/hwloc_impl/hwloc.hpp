@@ -216,9 +216,9 @@ struct set_affinity
         hwloc_cpuset_t cpu_set = hwloc_bitmap_alloc();
         hwloc_bitmap_zero(cpu_set);
 
-        typename std::set< cpu_identifier_wrapper >::const_iterator i =
+        std::set< cpu_identifier_wrapper >::const_iterator i =
             cpus.begin();
-        typename std::set< cpu_identifier_wrapper >::const_iterator iend =
+        std::set< cpu_identifier_wrapper >::const_iterator iend =
             cpus.end();
 
         for (; i != iend; ++i)

@@ -34,5 +34,7 @@ esac
 AC_ARG_WITH([hwloc], AS_HELP_STRING([--with-hwloc],
 	    [Use hwloc library even if this platform doesn't require it]),
 	    CPPFLAGS="$CPPFLAGS -DCPUAFF_USE_HWLOC" LIBS="$LIBS -lhwloc")
+	   
+CXXFLAGS="$CXXFLAGS -Wall -Werror -pedantic"
 
 AC_OUTPUT

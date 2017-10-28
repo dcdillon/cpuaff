@@ -111,9 +111,9 @@ class pci_name_resolver
         std::ifstream infile(file.c_str());
         bool retval = infile.good();
 
-        int32_t vendor;
+        int32_t vendor = 0;
         std::string vendor_description;
-        int32_t device;
+        int32_t device = 0;
         std::string device_description;
 
         while (infile.good())

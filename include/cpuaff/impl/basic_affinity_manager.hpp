@@ -152,7 +152,7 @@ class basic_affinity_manager
     {
         if (has_cpus())
         {
-            if (i >= 0 && i < cpu_by_index_.size())
+            if (i >= 0 && uint32_t(i) < cpu_by_index_.size())
             {
                 cpu = cpu_by_index_[i];
                 return true;
