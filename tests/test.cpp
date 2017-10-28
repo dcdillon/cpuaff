@@ -178,7 +178,6 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
             REQUIRE(manager.set_affinity(new_affinity));
             REQUIRE(manager.get_affinity(cpus));
 
-#if !defined(USING_TRAVIS_CI)
             cpuaff::cpu_set::iterator i = cpus.begin();
             cpuaff::cpu_set::iterator iend = cpus.end();
             cpuaff::cpu_set::iterator j = new_affinity.begin();
@@ -188,7 +187,6 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
             {
                 REQUIRE((*i) == (*j));
             }
-#endif
 
             WARN("Affinity is: " << cpus);
         }
@@ -205,7 +203,6 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
             REQUIRE(manager.set_affinity(new_affinity));
             REQUIRE(manager.get_affinity(cpus));
 
-#if !defined(USING_TRAVIS_CI)
             cpuaff::cpu_set::iterator i = cpus.begin();
             cpuaff::cpu_set::iterator iend = cpus.end();
             cpuaff::cpu_set::iterator j = new_affinity.begin();
@@ -215,7 +212,6 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
             {
                 REQUIRE((*i) == (*j));
             }
-#endif
 
             WARN("Affinity is: " << cpus);
         }
@@ -229,10 +225,8 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
             REQUIRE(manager.pin(first_cpu));
             REQUIRE(manager.get_affinity(cpus));
             
-#if !defined(USING_TRAVIS_CI)
             REQUIRE(cpus.size() == 1);
             REQUIRE(*cpus.begin() == first_cpu);
-#endif
 
             WARN("Affinty is: " << cpus);
         }
@@ -263,7 +257,6 @@ TEST_CASE("affinity_stack", "[affinity_stack]")
         REQUIRE(stack.get_affinity(cpus));
         REQUIRE(cpus.size() == original_affinity.size());
 
-#if !defined(USING_TRAVIS_CI)
         {
             cpuaff::cpu_set::iterator i = cpus.begin();
             cpuaff::cpu_set::iterator iend = cpus.end();
@@ -275,7 +268,6 @@ TEST_CASE("affinity_stack", "[affinity_stack]")
                 REQUIRE((*i) == (*j));
             }
         }
-#endif
 
         cpuaff::cpu_set new_affinity;
         new_affinity.insert(*original_affinity.begin());
@@ -285,7 +277,6 @@ TEST_CASE("affinity_stack", "[affinity_stack]")
         REQUIRE(stack.set_affinity(new_affinity));
         REQUIRE(stack.get_affinity(cpus));
         
-#if !defined(USING_TRAVIS_CI)
         {
             cpuaff::cpu_set::iterator i = cpus.begin();
             cpuaff::cpu_set::iterator iend = cpus.end();
@@ -297,7 +288,6 @@ TEST_CASE("affinity_stack", "[affinity_stack]")
                 REQUIRE((*i) == (*j));
             }
         }
-#endif
 
         cpus.clear();
         
@@ -306,7 +296,6 @@ TEST_CASE("affinity_stack", "[affinity_stack]")
         REQUIRE(stack.pop_affinity());
         REQUIRE(stack.get_affinity(cpus));
 
-#if !defined(USING_TRAVIS_CI)
         {
             cpuaff::cpu_set::iterator i = cpus.begin();
             cpuaff::cpu_set::iterator iend = cpus.end();
@@ -318,7 +307,6 @@ TEST_CASE("affinity_stack", "[affinity_stack]")
                 REQUIRE((*i) == (*j));
             }
         }
-#endif
     }
 }
 
@@ -359,7 +347,6 @@ TEST_CASE("native_cpu_mapper", "[native_cpu_mapper]")
 {
     SECTION("native_cpu_mapper member functions")
     {
-#if !defined(USING_TRAVIS_CI)
         cpuaff::affinity_manager manager;
 
         REQUIRE(manager.has_cpus());
@@ -382,6 +369,5 @@ TEST_CASE("native_cpu_mapper", "[native_cpu_mapper]")
             REQUIRE(mapper.get_cpu_from_native(cpu, native));
             REQUIRE(mapper.get_cpu_from_native(cpu, native.get()));
         }
-#endif
     }
 }
