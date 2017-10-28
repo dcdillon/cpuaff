@@ -1,4 +1,4 @@
-/* Copyright (c) 2015, Daniel C. Dillon
+/* Copyright (c) 2015-2017, Daniel C. Dillon
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,18 +33,18 @@
 #include "config.hpp"
 
 #include "cpu_spec.hpp"
+#include "impl/basic_affinity_manager.hpp"
+#include "impl/basic_affinity_stack.hpp"
 #include "impl/basic_cpu.hpp"
 #include "impl/basic_cpu_set.hpp"
-#include "impl/basic_affinity_manager.hpp"
 #include "impl/basic_native_cpu_mapper.hpp"
-#include "impl/basic_affinity_stack.hpp"
 #include "impl/basic_round_robin_allocator.hpp"
 
 #if defined(CPUAFF_PCI_SUPPORTED)
 
 #include "impl/basic_pci_device.hpp"
-#include "impl/basic_pci_device_set.hpp"
 #include "impl/basic_pci_device_manager.hpp"
+#include "impl/basic_pci_device_set.hpp"
 #include "pci_device_description.hpp"
 #include "pci_device_spec.hpp"
 #include "pci_name_resolver.hpp"

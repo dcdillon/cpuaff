@@ -83,8 +83,8 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
         REQUIRE(manager.get_cpus_by_core(cpus, cpu.core()));
         REQUIRE(
             manager.get_cpus_by_processing_unit(cpus, cpu.processing_unit()));
-        REQUIRE(manager.get_cpus_by_socket_and_core(
-            cpus, cpu.socket(), cpu.core()));
+        REQUIRE(manager.get_cpus_by_socket_and_core(cpus, cpu.socket(),
+                                                    cpu.core()));
 
         REQUIRE(manager.get_affinity(cpus));
         REQUIRE(cpus.size() > 0);

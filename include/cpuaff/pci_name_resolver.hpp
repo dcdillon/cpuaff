@@ -1,4 +1,4 @@
-/* Copyright (c) 2015, Daniel C. Dillon
+/* Copyright (c) 2015-2017, Daniel C. Dillon
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,13 +29,13 @@
  */
 
 #pragma once
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <map>
-#include <cstdlib>
-#include "pci_device_spec.hpp"
 #include "pci_device_description.hpp"
+#include "pci_device_spec.hpp"
+#include <cstdlib>
+#include <fstream>
+#include <map>
+#include <sstream>
+#include <string>
 
 namespace cpuaff
 {

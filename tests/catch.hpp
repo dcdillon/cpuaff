@@ -60,9 +60,9 @@
 #define INTERNAL_CATCH_STRINGIFY2(expr) #expr
 #define INTERNAL_CATCH_STRINGIFY(expr) INTERNAL_CATCH_STRINGIFY2(expr)
 
+#include <algorithm>
 #include <sstream>
 #include <stdexcept>
-#include <algorithm>
 
 // #included from: catch_compiler_capabilities.h
 #define TWOBLUECUBES_CATCH_COMPILER_CAPABILITIES_HPP_INCLUDED
@@ -165,7 +165,7 @@
 #if (__cplusplus == 201103L)
 #define CATCH_CPP11
 #define CATCH_CPP11_OR_GREATER
-#elif(__cplusplus >= 201103L)
+#elif (__cplusplus >= 201103L)
 #define CATCH_CPP11_OR_GREATER
 #endif
 
@@ -432,8 +432,8 @@ struct SharedImpl : T
 #endif
 
 #include <memory>
-#include <vector>
 #include <stdlib.h>
+#include <vector>
 
 namespace Catch
 {
@@ -549,8 +549,8 @@ struct AutoReg
             NameAndDesc const &nameAndDesc,
             SourceLineInfo const &lineInfo)
     {
-        registerTestCase(
-            new MethodTestCase< C >(method), className, nameAndDesc, lineInfo);
+        registerTestCase(new MethodTestCase< C >(method), className,
+                         nameAndDesc, lineInfo);
     }
 
     void registerTestCase(ITestCase *testCase,
@@ -1197,11 +1197,11 @@ struct SizedIf< sizeof(FalseType) > : FalseType
 
 }  // end namespace Catch
 
-#include <sstream>
+#include <cstddef>
 #include <iomanip>
 #include <limits>
+#include <sstream>
 #include <vector>
-#include <cstddef>
 
 #ifdef __OBJC__
 // #included from: catch_objc_arc.hpp
@@ -1775,21 +1775,21 @@ struct IRunner
     resultBuilder.react();
 
 ///////////////////////////////////////////////////////////////////////////////
-#define INTERNAL_CATCH_TEST(expr, resultDisposition, macroName)            \
-    do                                                                     \
-    {                                                                      \
-        Catch::ResultBuilder __catchResult(                                \
-            macroName, CATCH_INTERNAL_LINEINFO, #expr, resultDisposition); \
-        try                                                                \
-        {                                                                  \
-            (__catchResult->*expr).endExpression();                        \
-        }                                                                  \
-        catch (...)                                                        \
-        {                                                                  \
-            __catchResult.useActiveException(                              \
-                Catch::ResultDisposition::Normal);                         \
-        }                                                                  \
-        INTERNAL_CATCH_REACT(__catchResult)                                \
+#define INTERNAL_CATCH_TEST(expr, resultDisposition, macroName)                \
+    do                                                                         \
+    {                                                                          \
+        Catch::ResultBuilder __catchResult(macroName, CATCH_INTERNAL_LINEINFO, \
+                                           #expr, resultDisposition);          \
+        try                                                                    \
+        {                                                                      \
+            (__catchResult->*expr).endExpression();                            \
+        }                                                                      \
+        catch (...)                                                            \
+        {                                                                      \
+            __catchResult.useActiveException(                                  \
+                Catch::ResultDisposition::Normal);                             \
+        }                                                                      \
+        INTERNAL_CATCH_REACT(__catchResult)                                    \
     } while (Catch::isTrue(false && (expr)))  // expr here is never evaluated at
                                               // runtime but it forces the
                                               // compiler to give it a look
@@ -1805,108 +1805,107 @@ struct IRunner
     if (!Catch::getResultCapture().getLastResult()->succeeded())
 
 ///////////////////////////////////////////////////////////////////////////////
-#define INTERNAL_CATCH_NO_THROW(expr, resultDisposition, macroName)        \
-    do                                                                     \
-    {                                                                      \
-        Catch::ResultBuilder __catchResult(                                \
-            macroName, CATCH_INTERNAL_LINEINFO, #expr, resultDisposition); \
-        try                                                                \
-        {                                                                  \
-            expr;                                                          \
-            __catchResult.captureResult(Catch::ResultWas::Ok);             \
-        }                                                                  \
-        catch (...)                                                        \
-        {                                                                  \
-            __catchResult.useActiveException(resultDisposition);           \
-        }                                                                  \
-        INTERNAL_CATCH_REACT(__catchResult)                                \
+#define INTERNAL_CATCH_NO_THROW(expr, resultDisposition, macroName)            \
+    do                                                                         \
+    {                                                                          \
+        Catch::ResultBuilder __catchResult(macroName, CATCH_INTERNAL_LINEINFO, \
+                                           #expr, resultDisposition);          \
+        try                                                                    \
+        {                                                                      \
+            expr;                                                              \
+            __catchResult.captureResult(Catch::ResultWas::Ok);                 \
+        }                                                                      \
+        catch (...)                                                            \
+        {                                                                      \
+            __catchResult.useActiveException(resultDisposition);               \
+        }                                                                      \
+        INTERNAL_CATCH_REACT(__catchResult)                                    \
     } while (Catch::alwaysFalse())
 
 ///////////////////////////////////////////////////////////////////////////////
-#define INTERNAL_CATCH_THROWS(expr, resultDisposition, macroName)          \
-    do                                                                     \
-    {                                                                      \
-        Catch::ResultBuilder __catchResult(                                \
-            macroName, CATCH_INTERNAL_LINEINFO, #expr, resultDisposition); \
-        if (__catchResult.allowThrows())                                   \
-            try                                                            \
-            {                                                              \
-                expr;                                                      \
-                __catchResult.captureResult(                               \
-                    Catch::ResultWas::DidntThrowException);                \
-            }                                                              \
-            catch (...)                                                    \
-            {                                                              \
-                __catchResult.captureResult(Catch::ResultWas::Ok);         \
-            }                                                              \
-        else                                                               \
-            __catchResult.captureResult(Catch::ResultWas::Ok);             \
-        INTERNAL_CATCH_REACT(__catchResult)                                \
+#define INTERNAL_CATCH_THROWS(expr, resultDisposition, macroName)              \
+    do                                                                         \
+    {                                                                          \
+        Catch::ResultBuilder __catchResult(macroName, CATCH_INTERNAL_LINEINFO, \
+                                           #expr, resultDisposition);          \
+        if (__catchResult.allowThrows())                                       \
+            try                                                                \
+            {                                                                  \
+                expr;                                                          \
+                __catchResult.captureResult(                                   \
+                    Catch::ResultWas::DidntThrowException);                    \
+            }                                                                  \
+            catch (...)                                                        \
+            {                                                                  \
+                __catchResult.captureResult(Catch::ResultWas::Ok);             \
+            }                                                                  \
+        else                                                                   \
+            __catchResult.captureResult(Catch::ResultWas::Ok);                 \
+        INTERNAL_CATCH_REACT(__catchResult)                                    \
     } while (Catch::alwaysFalse())
 
 ///////////////////////////////////////////////////////////////////////////////
-#define INTERNAL_CATCH_THROWS_AS(                                          \
-    expr, exceptionType, resultDisposition, macroName)                     \
-    do                                                                     \
-    {                                                                      \
-        Catch::ResultBuilder __catchResult(                                \
-            macroName, CATCH_INTERNAL_LINEINFO, #expr, resultDisposition); \
-        if (__catchResult.allowThrows())                                   \
-            try                                                            \
-            {                                                              \
-                expr;                                                      \
-                __catchResult.captureResult(                               \
-                    Catch::ResultWas::DidntThrowException);                \
-            }                                                              \
-            catch (exceptionType)                                          \
-            {                                                              \
-                __catchResult.captureResult(Catch::ResultWas::Ok);         \
-            }                                                              \
-            catch (...)                                                    \
-            {                                                              \
-                __catchResult.useActiveException(resultDisposition);       \
-            }                                                              \
-        else                                                               \
-            __catchResult.captureResult(Catch::ResultWas::Ok);             \
-        INTERNAL_CATCH_REACT(__catchResult)                                \
+#define INTERNAL_CATCH_THROWS_AS(expr, exceptionType, resultDisposition,       \
+                                 macroName)                                    \
+    do                                                                         \
+    {                                                                          \
+        Catch::ResultBuilder __catchResult(macroName, CATCH_INTERNAL_LINEINFO, \
+                                           #expr, resultDisposition);          \
+        if (__catchResult.allowThrows())                                       \
+            try                                                                \
+            {                                                                  \
+                expr;                                                          \
+                __catchResult.captureResult(                                   \
+                    Catch::ResultWas::DidntThrowException);                    \
+            }                                                                  \
+            catch (exceptionType)                                              \
+            {                                                                  \
+                __catchResult.captureResult(Catch::ResultWas::Ok);             \
+            }                                                                  \
+            catch (...)                                                        \
+            {                                                                  \
+                __catchResult.useActiveException(resultDisposition);           \
+            }                                                                  \
+        else                                                                   \
+            __catchResult.captureResult(Catch::ResultWas::Ok);                 \
+        INTERNAL_CATCH_REACT(__catchResult)                                    \
     } while (Catch::alwaysFalse())
 
 ///////////////////////////////////////////////////////////////////////////////
 #ifdef CATCH_CONFIG_VARIADIC_MACROS
-#define INTERNAL_CATCH_MSG(messageType, resultDisposition, macroName, ...) \
-    do                                                                     \
-    {                                                                      \
-        Catch::ResultBuilder __catchResult(                                \
-            macroName, CATCH_INTERNAL_LINEINFO, "", resultDisposition);    \
-        __catchResult << __VA_ARGS__ + ::Catch::StreamEndStop();           \
-        __catchResult.captureResult(messageType);                          \
-        INTERNAL_CATCH_REACT(__catchResult)                                \
+#define INTERNAL_CATCH_MSG(messageType, resultDisposition, macroName, ...)     \
+    do                                                                         \
+    {                                                                          \
+        Catch::ResultBuilder __catchResult(macroName, CATCH_INTERNAL_LINEINFO, \
+                                           "", resultDisposition);             \
+        __catchResult << __VA_ARGS__ + ::Catch::StreamEndStop();               \
+        __catchResult.captureResult(messageType);                              \
+        INTERNAL_CATCH_REACT(__catchResult)                                    \
     } while (Catch::alwaysFalse())
 #else
-#define INTERNAL_CATCH_MSG(messageType, resultDisposition, macroName, log) \
-    do                                                                     \
-    {                                                                      \
-        Catch::ResultBuilder __catchResult(                                \
-            macroName, CATCH_INTERNAL_LINEINFO, "", resultDisposition);    \
-        __catchResult << log + ::Catch::StreamEndStop();                   \
-        __catchResult.captureResult(messageType);                          \
-        INTERNAL_CATCH_REACT(__catchResult)                                \
+#define INTERNAL_CATCH_MSG(messageType, resultDisposition, macroName, log)     \
+    do                                                                         \
+    {                                                                          \
+        Catch::ResultBuilder __catchResult(macroName, CATCH_INTERNAL_LINEINFO, \
+                                           "", resultDisposition);             \
+        __catchResult << log + ::Catch::StreamEndStop();                       \
+        __catchResult.captureResult(messageType);                              \
+        INTERNAL_CATCH_REACT(__catchResult)                                    \
     } while (Catch::alwaysFalse())
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
-#define INTERNAL_CATCH_INFO(log, macroName)                             \
-    Catch::ScopedMessage INTERNAL_CATCH_UNIQUE_NAME(scopedMessage) =    \
-        Catch::MessageBuilder(                                          \
-            macroName, CATCH_INTERNAL_LINEINFO, Catch::ResultWas::Info) \
+#define INTERNAL_CATCH_INFO(log, macroName)                          \
+    Catch::ScopedMessage INTERNAL_CATCH_UNIQUE_NAME(scopedMessage) = \
+        Catch::MessageBuilder(macroName, CATCH_INTERNAL_LINEINFO,    \
+                              Catch::ResultWas::Info)                \
         << log;
 
 ///////////////////////////////////////////////////////////////////////////////
 #define INTERNAL_CHECK_THAT(arg, matcher, resultDisposition, macroName)        \
     do                                                                         \
     {                                                                          \
-        Catch::ResultBuilder __catchResult(macroName,                          \
-                                           CATCH_INTERNAL_LINEINFO,            \
+        Catch::ResultBuilder __catchResult(macroName, CATCH_INTERNAL_LINEINFO, \
                                            #arg " " #matcher,                  \
                                            resultDisposition);                 \
         try                                                                    \
@@ -2093,9 +2092,9 @@ class Section
 #define TWOBLUECUBES_CATCH_GENERATORS_HPP_INCLUDED
 
 #include <iterator>
-#include <vector>
-#include <string>
 #include <stdlib.h>
+#include <string>
+#include <vector>
 
 namespace Catch
 {
@@ -2213,8 +2212,7 @@ class CompositeGenerator
    private:
     void move(CompositeGenerator &other)
     {
-        std::copy(other.m_composed.begin(),
-                  other.m_composed.end(),
+        std::copy(other.m_composed.begin(), other.m_composed.end(),
                   std::back_inserter(m_composed));
         m_totalSize += other.m_totalSize;
         other.m_composed.clear();
@@ -2866,8 +2864,8 @@ struct ITagAliasRegistry
 // #included from: internal/catch_test_case_info.h
 #define TWOBLUECUBES_CATCH_TEST_CASE_INFO_H_INCLUDED
 
-#include <string>
 #include <set>
+#include <string>
 
 #ifdef __clang__
 #pragma clang diagnostic push
@@ -2999,9 +2997,9 @@ inline std::string getAnnotation(Class cls,
                                  std::string const &annotationName,
                                  std::string const &testCaseName)
 {
-    NSString *selStr = [[NSString alloc] initWithFormat:@"Catch_%s_%s",
-                                                        annotationName.c_str(),
-                                                        testCaseName.c_str()];
+    NSString *selStr =
+        [[NSString alloc] initWithFormat:@"Catch_%s_%s", annotationName.c_str(),
+                                         testCaseName.c_str()];
     SEL sel = NSSelectorFromString(selStr);
     arcSafeRelease(selStr);
     id value = performOptionalSelector(cls, sel);
@@ -3039,12 +3037,9 @@ inline size_t registerTestMethods()
                         Detail::getAnnotation(cls, "Description", testCaseName);
                     const char *className = class_getName(cls);
 
-                    getMutableRegistryHub().registerTest(
-                        makeTestCase(new OcMethod(cls, selector),
-                                     className,
-                                     name.c_str(),
-                                     desc.c_str(),
-                                     SourceLineInfo()));
+                    getMutableRegistryHub().registerTest(makeTestCase(
+                        new OcMethod(cls, selector), className, name.c_str(),
+                        desc.c_str(), SourceLineInfo()));
                     noTestMethods++;
                 }
             }
@@ -3318,8 +3313,7 @@ class TestSpec
             for (std::vector< Ptr< Pattern > >::const_iterator
                      it = m_patterns.begin(),
                      itEnd = m_patterns.end();
-                 it != itEnd;
-                 ++it)
+                 it != itEnd; ++it)
                 if (!(*it)->matches(testCase))
                     return false;
             return true;
@@ -3333,8 +3327,7 @@ class TestSpec
         // A TestSpec matches if any filter matches
         for (std::vector< Filter >::const_iterator it = m_filters.begin(),
                                                    itEnd = m_filters.end();
-             it != itEnd;
-             ++it)
+             it != itEnd; ++it)
             if (it->matches(testCase))
                 return true;
         return false;
@@ -3565,10 +3558,10 @@ class Stream
 };
 }
 
-#include <memory>
-#include <vector>
-#include <string>
 #include <iostream>
+#include <memory>
+#include <string>
+#include <vector>
 
 #ifndef CATCH_CONFIG_CONSOLE_WIDTH
 #define CATCH_CONFIG_CONSOLE_WIDTH 80
@@ -3755,9 +3748,9 @@ class Config : public SharedImpl< IConfig >
 #define TBC_TEXT_FORMAT_H_INCLUDED
 #endif
 
+#include <sstream>
 #include <string>
 #include <vector>
-#include <sstream>
 
 // Use optional outer namespace
 #ifdef STITCH_TBC_TEXT_FORMAT_OUTER_NAMESPACE
@@ -3912,8 +3905,7 @@ class Text
                                            Text const &_text)
     {
         for (Text::const_iterator it = _text.begin(), itEnd = _text.end();
-             it != itEnd;
-             ++it)
+             it != itEnd; ++it)
         {
             if (it != _text.begin())
                 _stream << "\n";
@@ -3941,10 +3933,10 @@ class Text
 
 #undef STITCH_TBC_TEXT_FORMAT_OPEN_NAMESPACE
 
-#include <map>
 #include <algorithm>
-#include <stdexcept>
+#include <map>
 #include <memory>
+#include <stdexcept>
 
 // Use optional outer namespace
 #ifdef STITCH_CLARA_OPEN_NAMESPACE
@@ -4028,8 +4020,8 @@ inline void convertInto(std::string const &_source, std::string &_dest)
 inline void convertInto(std::string const &_source, bool &_dest)
 {
     std::string sourceLC = _source;
-    std::transform(
-        sourceLC.begin(), sourceLC.end(), sourceLC.begin(), ::tolower);
+    std::transform(sourceLC.begin(), sourceLC.end(), sourceLC.begin(),
+                   ::tolower);
     if (sourceLC == "y" || sourceLC == "1" || sourceLC == "true" ||
         sourceLC == "yes" || sourceLC == "on")
         _dest = true;
@@ -4576,10 +4568,10 @@ class CommandLine
 
         for (it = itBegin; it != itEnd; ++it)
         {
-            Detail::Text usage(
-                it->commands(),
-                Detail::TextAttributes().setWidth(maxWidth + indent).setIndent(
-                    indent));
+            Detail::Text usage(it->commands(),
+                               Detail::TextAttributes()
+                                   .setWidth(maxWidth + indent)
+                                   .setIndent(indent));
             Detail::Text desc(
                 it->description,
                 Detail::TextAttributes().setWidth(width - maxWidth - 3));
@@ -4592,7 +4584,8 @@ class CommandLine
 
                 if (i < desc.size() && !desc[i].empty())
                     os << std::string(indent + 2 + maxWidth - usageCol.size(),
-                                      ' ') << desc[i];
+                                      ' ')
+                       << desc[i];
                 os << "\n";
             }
         }
@@ -4745,11 +4738,10 @@ class CommandLine
         if (!errors.empty())
         {
             std::ostringstream oss;
-            for (
-                std::vector< std::string >::const_iterator it = errors.begin(),
-                                                           itEnd = errors.end();
-                it != itEnd;
-                ++it)
+            for (std::vector< std::string >::const_iterator
+                     it = errors.begin(),
+                     itEnd = errors.end();
+                 it != itEnd; ++it)
             {
                 if (it != errors.begin())
                     oss << "\n";
@@ -4801,11 +4793,10 @@ class CommandLine
             !m_floatingArg.get())
             throw std::logic_error("No options or arguments specified");
 
-        for (
-            typename std::vector< Arg >::const_iterator it = m_options.begin(),
-                                                        itEnd = m_options.end();
-            it != itEnd;
-            ++it)
+        for (typename std::vector< Arg >::const_iterator
+                 it = m_options.begin(),
+                 itEnd = m_options.end();
+             it != itEnd; ++it)
             it->validate();
     }
 
@@ -4891,29 +4882,37 @@ inline Clara::CommandLine< ConfigData > makeCommandLineParser()
 
     cli.bindProcessName(&ConfigData::processName);
 
-    cli["-?"]["-h"]["--help"].describe("display usage information").bind(
-        &ConfigData::showHelp);
+    cli["-?"]["-h"]["--help"]
+        .describe("display usage information")
+        .bind(&ConfigData::showHelp);
 
-    cli["-l"]["--list-tests"].describe("list all/matching test cases").bind(
-        &ConfigData::listTests);
+    cli["-l"]["--list-tests"]
+        .describe("list all/matching test cases")
+        .bind(&ConfigData::listTests);
 
-    cli["-t"]["--list-tags"].describe("list all/matching tags").bind(
-        &ConfigData::listTags);
+    cli["-t"]["--list-tags"]
+        .describe("list all/matching tags")
+        .bind(&ConfigData::listTags);
 
-    cli["-s"]["--success"].describe("include successful tests in output").bind(
-        &ConfigData::showSuccessfulTests);
+    cli["-s"]["--success"]
+        .describe("include successful tests in output")
+        .bind(&ConfigData::showSuccessfulTests);
 
-    cli["-b"]["--break"].describe("break into debugger on failure").bind(
-        &ConfigData::shouldDebugBreak);
+    cli["-b"]["--break"]
+        .describe("break into debugger on failure")
+        .bind(&ConfigData::shouldDebugBreak);
 
-    cli["-e"]["--nothrow"].describe("skip exception tests").bind(
-        &ConfigData::noThrow);
+    cli["-e"]["--nothrow"]
+        .describe("skip exception tests")
+        .bind(&ConfigData::noThrow);
 
-    cli["-i"]["--invisibles"].describe("show invisibles (tabs, newlines)").bind(
-        &ConfigData::showInvisibles);
+    cli["-i"]["--invisibles"]
+        .describe("show invisibles (tabs, newlines)")
+        .bind(&ConfigData::showInvisibles);
 
-    cli["-o"]["--out"].describe("output filename").bind(
-        &ConfigData::outputFilename, "filename");
+    cli["-o"]["--out"]
+        .describe("output filename")
+        .bind(&ConfigData::outputFilename, "filename");
 
     cli["-r"]["--reporter"]
         //            .placeholder( "name[:filename]" )
@@ -4922,14 +4921,17 @@ inline Clara::CommandLine< ConfigData > makeCommandLineParser()
 
     cli["-n"]["--name"].describe("suite name").bind(&ConfigData::name, "name");
 
-    cli["-a"]["--abort"].describe("abort at first failure").bind(
-        &abortAfterFirst);
+    cli["-a"]["--abort"]
+        .describe("abort at first failure")
+        .bind(&abortAfterFirst);
 
-    cli["-x"]["--abortx"].describe("abort after x failures").bind(
-        &abortAfterX, "no. failures");
+    cli["-x"]["--abortx"]
+        .describe("abort after x failures")
+        .bind(&abortAfterX, "no. failures");
 
-    cli["-w"]["--warn"].describe("enable warnings").bind(&addWarning,
-                                                         "warning name");
+    cli["-w"]["--warn"]
+        .describe("enable warnings")
+        .bind(&addWarning, "warning name");
 
     // - needs updating if reinstated
     //        cli.into( &setVerbosity )
@@ -4938,11 +4940,13 @@ inline Clara::CommandLine< ConfigData > makeCommandLineParser()
     //            .longOpt( "verbosity" )
     //            .placeholder( "level" );
 
-    cli[_].describe("which test or tests to use").bind(
-        &addTestOrTags, "test name, pattern or tags");
+    cli[_]
+        .describe("which test or tests to use")
+        .bind(&addTestOrTags, "test name, pattern or tags");
 
-    cli["-d"]["--durations"].describe("show test durations").bind(
-        &setShowDurations, "yes/no");
+    cli["-d"]["--durations"]
+        .describe("show test durations")
+        .bind(&setShowDurations, "yes/no");
 
     cli["-f"]["--input-file"]
         .describe("load test names to run from a file")
@@ -4953,8 +4957,9 @@ inline Clara::CommandLine< ConfigData > makeCommandLineParser()
         .describe("list all/matching test cases names only")
         .bind(&ConfigData::listTestNamesOnly);
 
-    cli["--list-reporters"].describe("list all reporters").bind(
-        &ConfigData::listReporters);
+    cli["--list-reporters"]
+        .describe("list all reporters")
+        .bind(&ConfigData::listReporters);
 
     return cli;
 }
@@ -4982,9 +4987,9 @@ inline Clara::CommandLine< ConfigData > makeCommandLineParser()
 #endif
 #endif
 #ifndef TWOBLUECUBES_TEXT_FORMAT_H_ALREADY_INCLUDED
+#include <sstream>
 #include <string>
 #include <vector>
-#include <sstream>
 
 // Use optional outer namespace
 #ifdef CLICHE_TBC_TEXT_FORMAT_OUTER_NAMESPACE
@@ -5139,8 +5144,7 @@ class Text
                                            Text const &_text)
     {
         for (Text::const_iterator it = _text.begin(), itEnd = _text.end();
-             it != itEnd;
-             ++it)
+             it != itEnd; ++it)
         {
             if (it != _text.begin())
                 _stream << "\n";
@@ -5238,10 +5242,10 @@ inline std::ostream &operator<<(std::ostream &os, Colour const &) { return os; }
 // #included from: catch_interfaces_reporter.h
 #define TWOBLUECUBES_CATCH_INTERFACES_REPORTER_H_INCLUDED
 
-#include <string>
-#include <ostream>
-#include <map>
 #include <assert.h>
+#include <map>
+#include <ostream>
+#include <string>
 
 namespace Catch
 {
@@ -5500,8 +5504,8 @@ struct IReporterRegistry
 };
 }
 
-#include <limits>
 #include <algorithm>
+#include <limits>
 
 namespace Catch
 {
@@ -5523,12 +5527,11 @@ inline std::size_t listTests(Config const &config)
     tagsAttr.setIndent(6);
 
     std::vector< TestCase > matchedTestCases;
-    getRegistryHub().getTestCaseRegistry().getFilteredTests(
-        testSpec, config, matchedTestCases);
+    getRegistryHub().getTestCaseRegistry().getFilteredTests(testSpec, config,
+                                                            matchedTestCases);
     for (std::vector< TestCase >::const_iterator it = matchedTestCases.begin(),
                                                  itEnd = matchedTestCases.end();
-         it != itEnd;
-         ++it)
+         it != itEnd; ++it)
     {
         matchedTests++;
         TestCaseInfo const &testCaseInfo = it->getTestCaseInfo();
@@ -5557,12 +5560,11 @@ inline std::size_t listTestsNamesOnly(Config const &config)
             TestSpecParser(ITagAliasRegistry::get()).parse("*").testSpec();
     std::size_t matchedTests = 0;
     std::vector< TestCase > matchedTestCases;
-    getRegistryHub().getTestCaseRegistry().getFilteredTests(
-        testSpec, config, matchedTestCases);
+    getRegistryHub().getTestCaseRegistry().getFilteredTests(testSpec, config,
+                                                            matchedTestCases);
     for (std::vector< TestCase >::const_iterator it = matchedTestCases.begin(),
                                                  itEnd = matchedTestCases.end();
-         it != itEnd;
-         ++it)
+         it != itEnd; ++it)
     {
         matchedTests++;
         TestCaseInfo const &testCaseInfo = it->getTestCaseInfo();
@@ -5584,8 +5586,7 @@ struct TagInfo
         std::string out;
         for (std::set< std::string >::const_iterator it = spellings.begin(),
                                                      itEnd = spellings.end();
-             it != itEnd;
-             ++it)
+             it != itEnd; ++it)
             out += "[" + *it + "]";
         return out;
     }
@@ -5608,26 +5609,25 @@ inline std::size_t listTags(Config const &config)
     std::map< std::string, TagInfo > tagCounts;
 
     std::vector< TestCase > matchedTestCases;
-    getRegistryHub().getTestCaseRegistry().getFilteredTests(
-        testSpec, config, matchedTestCases);
+    getRegistryHub().getTestCaseRegistry().getFilteredTests(testSpec, config,
+                                                            matchedTestCases);
     for (std::vector< TestCase >::const_iterator it = matchedTestCases.begin(),
                                                  itEnd = matchedTestCases.end();
-         it != itEnd;
-         ++it)
+         it != itEnd; ++it)
     {
         for (std::set< std::string >::const_iterator
                  tagIt = it->getTestCaseInfo().tags.begin(),
                  tagItEnd = it->getTestCaseInfo().tags.end();
-             tagIt != tagItEnd;
-             ++tagIt)
+             tagIt != tagItEnd; ++tagIt)
         {
             std::string tagName = *tagIt;
             std::string lcaseTagName = toLower(tagName);
             std::map< std::string, TagInfo >::iterator countIt =
                 tagCounts.find(lcaseTagName);
             if (countIt == tagCounts.end())
-                countIt = tagCounts.insert(std::make_pair(lcaseTagName,
-                                                          TagInfo())).first;
+                countIt =
+                    tagCounts.insert(std::make_pair(lcaseTagName, TagInfo()))
+                        .first;
             countIt->second.add(tagName);
         }
     }
@@ -5635,8 +5635,7 @@ inline std::size_t listTags(Config const &config)
     for (std::map< std::string, TagInfo >::const_iterator
              countIt = tagCounts.begin(),
              countItEnd = tagCounts.end();
-         countIt != countItEnd;
-         ++countIt)
+         countIt != countItEnd; ++countIt)
     {
         std::ostringstream oss;
         oss << "  " << std::setw(2) << countIt->second.count << "  ";
@@ -5700,9 +5699,9 @@ inline Option< std::size_t > list(Config const &config)
 // #included from: catch_test_case_tracker.hpp
 #define TWOBLUECUBES_CATCH_TEST_CASE_TRACKER_HPP_INCLUDED
 
+#include <assert.h>
 #include <map>
 #include <string>
-#include <assert.h>
 
 namespace Catch
 {
@@ -5750,8 +5749,7 @@ class TrackedSection
     {
         for (TrackedSections::const_iterator it = m_children.begin(),
                                              itEnd = m_children.end();
-             it != itEnd;
-             ++it)
+             it != itEnd; ++it)
             if (it->second.runState() != Completed)
             {
                 m_runState = ExecutingChildren;
@@ -5975,8 +5973,7 @@ class RunContext : public IResultCapture, public IRunner
 
         // Reset working state
         m_lastAssertionInfo =
-            AssertionInfo("",
-                          m_lastAssertionInfo.lineInfo,
+            AssertionInfo("", m_lastAssertionInfo.lineInfo,
                           "{Unknown expression after the reported line}",
                           m_lastAssertionInfo.resultDisposition);
         m_lastResult = result;
@@ -6066,17 +6063,16 @@ class RunContext : public IResultCapture, public IRunner
                         std::string &redirectedCerr)
     {
         TestCaseInfo const &testCaseInfo = m_activeTestCase->getTestCaseInfo();
-        SectionInfo testCaseSection(
-            testCaseInfo.lineInfo, testCaseInfo.name, testCaseInfo.description);
+        SectionInfo testCaseSection(testCaseInfo.lineInfo, testCaseInfo.name,
+                                    testCaseInfo.description);
         m_reporter->sectionStarting(testCaseSection);
         Counts prevAssertions = m_totals.assertions;
         double duration = 0;
         try
         {
-            m_lastAssertionInfo = AssertionInfo("TEST_CASE",
-                                                testCaseInfo.lineInfo,
-                                                "",
-                                                ResultDisposition::Normal);
+            m_lastAssertionInfo =
+                AssertionInfo("TEST_CASE", testCaseInfo.lineInfo, "",
+                              ResultDisposition::Normal);
             TestCaseTracker::Guard guard(*m_testCaseTracker);
 
             Timer timer;
@@ -6111,8 +6107,7 @@ class RunContext : public IResultCapture, public IRunner
         for (std::vector< UnfinishedSections >::const_reverse_iterator
                  it = m_unfinishedSections.rbegin(),
                  itEnd = m_unfinishedSections.rend();
-             it != itEnd;
-             ++it)
+             it != itEnd; ++it)
             sectionEnded(it->info, it->prevAssertions, it->durationInSeconds);
         m_unfinishedSections.clear();
         m_messages.clear();
@@ -6127,8 +6122,8 @@ class RunContext : public IResultCapture, public IRunner
             m_totals.assertions.failedButOk += assertions.failedButOk;
         }
 
-        SectionStats testCaseSectionStats(
-            testCaseSection, assertions, duration, missingAssertions);
+        SectionStats testCaseSectionStats(testCaseSection, assertions, duration,
+                                          missingAssertions);
         m_reporter->sectionEnded(testCaseSectionStats);
     }
 
@@ -6208,8 +6203,8 @@ extern Version libraryVersion;
 }
 
 #include <fstream>
-#include <stdlib.h>
 #include <limits>
+#include <stdlib.h>
 
 namespace Catch
 {
@@ -6243,8 +6238,7 @@ class Runner
         int testsRunForGroup = 0;
         for (std::vector< TestCase >::const_iterator it = testCases.begin(),
                                                      itEnd = testCases.end();
-             it != itEnd;
-             ++it)
+             it != itEnd; ++it)
         {
             testsRunForGroup++;
             if (m_testsAlreadyRun.find(*it) == m_testsAlreadyRun.end())
@@ -6436,10 +6430,10 @@ bool Session::alreadyInstantiated = false;
 // #included from: catch_test_case_registry_impl.hpp
 #define TWOBLUECUBES_CATCH_TEST_CASE_REGISTRY_IMPL_HPP_INCLUDED
 
-#include <vector>
+#include <iostream>
 #include <set>
 #include <sstream>
-#include <iostream>
+#include <vector>
 
 namespace Catch
 {
@@ -6500,8 +6494,7 @@ class TestRegistry : public ITestCaseRegistry
         for (std::vector< TestCase >::const_iterator
                  it = m_functionsInOrder.begin(),
                  itEnd = m_functionsInOrder.end();
-             it != itEnd;
-             ++it)
+             it != itEnd; ++it)
         {
             if (testSpec.matches(*it) &&
                 (config.allowThrows() || !it->throws()))
@@ -6553,8 +6546,8 @@ AutoReg::AutoReg(TestFunction function,
                  SourceLineInfo const &lineInfo,
                  NameAndDesc const &nameAndDesc)
 {
-    registerTestCase(
-        new FreeFunctionTestCase(function), "", nameAndDesc, lineInfo);
+    registerTestCase(new FreeFunctionTestCase(function), "", nameAndDesc,
+                     lineInfo);
 }
 
 AutoReg::~AutoReg() {}
@@ -6565,11 +6558,8 @@ void AutoReg::registerTestCase(ITestCase *testCase,
                                SourceLineInfo const &lineInfo)
 {
     getMutableRegistryHub().registerTest(
-        makeTestCase(testCase,
-                     extractClassName(classOrQualifiedMethodName),
-                     nameAndDesc.name,
-                     nameAndDesc.description,
-                     lineInfo));
+        makeTestCase(testCase, extractClassName(classOrQualifiedMethodName),
+                     nameAndDesc.name, nameAndDesc.description, lineInfo));
 }
 
 }  // end namespace Catch
@@ -6802,8 +6792,8 @@ class StreamBufBase : public std::streambuf
 };
 }
 
-#include <stdexcept>
 #include <cstdio>
+#include <stdexcept>
 
 namespace Catch
 {
@@ -6837,9 +6827,8 @@ class StreamBufImpl : public StreamBufBase
     {
         if (pbase() != pptr())
         {
-            m_writer(std::string(
-                pbase(),
-                static_cast< std::string::size_type >(pptr() - pbase())));
+            m_writer(std::string(pbase(), static_cast< std::string::size_type >(
+                                              pptr() - pbase())));
             setp(pbase(), epptr());
         }
         return 0;
@@ -7183,9 +7172,9 @@ Detail::IColourImpl *Colour::impl()
 // #included from: catch_generators_impl.hpp
 #define TWOBLUECUBES_CATCH_GENERATORS_IMPL_HPP_INCLUDED
 
-#include <vector>
-#include <string>
 #include <map>
+#include <string>
+#include <vector>
 
 namespace Catch
 {
@@ -7455,8 +7444,7 @@ TestCaseInfo::TestCaseInfo(std::string const &_name,
     std::ostringstream oss;
     for (std::set< std::string >::const_iterator it = _tags.begin(),
                                                  itEnd = _tags.end();
-         it != itEnd;
-         ++it)
+         it != itEnd; ++it)
     {
         oss << "[" << *it << "]";
         std::string lcaseTag = toLower(*it);
@@ -7691,14 +7679,11 @@ bool LegacyReporterAdapter::assertionEnded(AssertionStats const &assertionStats)
         for (std::vector< MessageInfo >::const_iterator
                  it = assertionStats.infoMessages.begin(),
                  itEnd = assertionStats.infoMessages.end();
-             it != itEnd;
-             ++it)
+             it != itEnd; ++it)
         {
             if (it->type == ResultWas::Info)
             {
-                ResultBuilder rb(it->macroName.c_str(),
-                                 it->lineInfo,
-                                 "",
+                ResultBuilder rb(it->macroName.c_str(), it->lineInfo, "",
                                  ResultDisposition::Normal);
                 rb << it->message;
                 rb.setResultType(ResultWas::Info);
@@ -7719,10 +7704,8 @@ void LegacyReporterAdapter::sectionEnded(SectionStats const &sectionStats)
 }
 void LegacyReporterAdapter::testCaseEnded(TestCaseStats const &testCaseStats)
 {
-    m_legacyReporter->EndTestCase(testCaseStats.testInfo,
-                                  testCaseStats.totals,
-                                  testCaseStats.stdOut,
-                                  testCaseStats.stdErr);
+    m_legacyReporter->EndTestCase(testCaseStats.testInfo, testCaseStats.totals,
+                                  testCaseStats.stdOut, testCaseStats.stdErr);
 }
 void LegacyReporterAdapter::testGroupEnded(TestGroupStats const &testGroupStats)
 {
@@ -7904,8 +7887,8 @@ Section::Section(SectionInfo const &info)
 Section::~Section()
 {
     if (m_sectionIncluded)
-        getResultCapture().sectionEnded(
-            m_info, m_assertions, m_timer.getElapsedSeconds());
+        getResultCapture().sectionEnded(m_info, m_assertions,
+                                        m_timer.getElapsedSeconds());
 }
 
 // This indicates whether the section should be executed or not
@@ -7922,9 +7905,9 @@ Section::operator bool() const { return m_sectionIncluded; }
 
 #include <assert.h>
 #include <stdbool.h>
+#include <sys/sysctl.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <sys/sysctl.h>
 
 namespace Catch
 {
@@ -7958,7 +7941,8 @@ bool isDebuggerActive()
     if (sysctl(mib, sizeof(mib) / sizeof(*mib), &info, &size, NULL, 0) != 0)
     {
         std::cerr << "\n** Call to sysctl failed - unable to determine if "
-                     "debugger is active **\n" << std::endl;
+                     "debugger is active **\n"
+                  << std::endl;
         return false;
     }
 
@@ -8027,8 +8011,7 @@ struct Endianness
 
     static Arch which()
     {
-        union _
-        {
+        union _ {
             int asInt;
             char asChar[sizeof(int)];
         } u;
@@ -8373,8 +8356,8 @@ class TagAliasRegistry : public ITagAliasRegistry
 
 }  // end namespace Catch
 
-#include <map>
 #include <iostream>
+#include <map>
 
 namespace Catch
 {
@@ -8397,8 +8380,7 @@ std::string TagAliasRegistry::expandAliases(
     for (std::map< std::string, TagAlias >::const_iterator
              it = m_registry.begin(),
              itEnd = m_registry.end();
-         it != itEnd;
-         ++it)
+         it != itEnd; ++it)
     {
         std::size_t pos = expandedTestSpec.find(it->first);
         if (pos != std::string::npos)
@@ -8419,7 +8401,8 @@ void TagAliasRegistry::add(char const *alias,
     {
         std::ostringstream oss;
         oss << "error: tag alias, \"" << alias
-            << "\" is not of the form [@alias name].\n" << lineInfo;
+            << "\" is not of the form [@alias name].\n"
+            << lineInfo;
         throw std::domain_error(oss.str().c_str());
     }
     if (!m_registry.insert(std::make_pair(alias, TagAlias(tag, lineInfo)))
@@ -8608,10 +8591,9 @@ struct CumulativeReporterBase : SharedImpl< IStreamingReporter >
         else
         {
             SectionNode &parentNode = *m_sectionStack.back();
-            SectionNode::ChildSections::const_iterator it =
-                std::find_if(parentNode.childSections.begin(),
-                             parentNode.childSections.end(),
-                             BySectionInfo(sectionInfo));
+            SectionNode::ChildSections::const_iterator it = std::find_if(
+                parentNode.childSections.begin(),
+                parentNode.childSections.end(), BySectionInfo(sectionInfo));
             if (it == parentNode.childSections.end())
             {
                 node = new SectionNode(incompleteStats);
@@ -8771,8 +8753,8 @@ class ReporterRegistrar
 // #included from: ../internal/catch_xmlwriter.hpp
 #define TWOBLUECUBES_CATCH_XMLWRITER_HPP_INCLUDED
 
-#include <sstream>
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -9115,16 +9097,16 @@ class XmlReporter : public SharedImpl< IReporter >
                 m_currentTestSuccess = false;
                 break;
             case ResultWas::Info:
-                m_xml.scopedElement("Info")
-                    .writeText(assertionResult.getMessage());
+                m_xml.scopedElement("Info").writeText(
+                    assertionResult.getMessage());
                 break;
             case ResultWas::Warning:
-                m_xml.scopedElement("Warning")
-                    .writeText(assertionResult.getMessage());
+                m_xml.scopedElement("Warning").writeText(
+                    assertionResult.getMessage());
                 break;
             case ResultWas::ExplicitFailure:
-                m_xml.scopedElement("Failure")
-                    .writeText(assertionResult.getMessage());
+                m_xml.scopedElement("Failure").writeText(
+                    assertionResult.getMessage());
                 m_currentTestSuccess = false;
                 break;
             case ResultWas::Unknown:
@@ -9254,8 +9236,7 @@ class JunitReporter : public CumulativeReporterBase
         for (TestGroupNode::ChildNodes::const_iterator
                  it = groupNode.children.begin(),
                  itEnd = groupNode.children.end();
-             it != itEnd;
-             ++it)
+             it != itEnd; ++it)
             writeTestCase(**it);
 
         xml.scopedElement("system-out")
@@ -9320,8 +9301,7 @@ class JunitReporter : public CumulativeReporterBase
         for (SectionNode::ChildSections::const_iterator
                  it = sectionNode.childSections.begin(),
                  itEnd = sectionNode.childSections.end();
-             it != itEnd;
-             ++it)
+             it != itEnd; ++it)
             if (className.empty())
                 writeSection(name, "", **it);
             else
@@ -9333,8 +9313,7 @@ class JunitReporter : public CumulativeReporterBase
         for (SectionNode::Assertions::const_iterator
                  it = sectionNode.assertions.begin(),
                  itEnd = sectionNode.assertions.end();
-             it != itEnd;
-             ++it)
+             it != itEnd; ++it)
             writeAssertion(*it);
     }
     void writeAssertion(AssertionStats const &stats)
@@ -9380,8 +9359,7 @@ class JunitReporter : public CumulativeReporterBase
             for (std::vector< MessageInfo >::const_iterator
                      it = stats.infoMessages.begin(),
                      itEnd = stats.infoMessages.end();
-                 it != itEnd;
-                 ++it)
+                 it != itEnd; ++it)
                 if (it->type == ResultWas::Info)
                     oss << it->message << "\n";
 
@@ -9639,7 +9617,8 @@ struct ConsoleReporter : StreamingReporterBase
                 stream << "with expansion:\n";
                 Colour colourGuard(Colour::ReconstructedExpression);
                 stream << Text(result.getExpandedExpression(),
-                               TextAttributes().setIndent(2)) << "\n";
+                               TextAttributes().setIndent(2))
+                       << "\n";
             }
         }
         void printMessage() const
@@ -9650,8 +9629,7 @@ struct ConsoleReporter : StreamingReporterBase
             for (std::vector< MessageInfo >::const_iterator
                      it = messages.begin(),
                      itEnd = messages.end();
-                 it != itEnd;
-                 ++it)
+                 it != itEnd; ++it)
             {
                 // If this assertion is a warning ignore any INFO messages
                 if (printInfoMessages || it->type != ResultWas::Info)
@@ -9764,8 +9742,10 @@ struct ConsoleReporter : StreamingReporterBase
         else
             i = 0;
         stream << Text(_string,
-                       TextAttributes().setIndent(indent + i).setInitialIndent(
-                           indent)) << "\n";
+                       TextAttributes()
+                           .setIndent(indent + i)
+                           .setInitialIndent(indent))
+               << "\n";
     }
 
     struct SummaryColumn
@@ -9780,8 +9760,7 @@ struct ConsoleReporter : StreamingReporterBase
             oss << count;
             std::string row = oss.str();
             for (std::vector< std::string >::iterator it = rows.begin();
-                 it != rows.end();
-                 ++it)
+                 it != rows.end(); ++it)
             {
                 while (it->size() < row.size()) *it = " " + *it;
                 while (it->size() > row.size()) row = " " + row;
@@ -9835,8 +9814,7 @@ struct ConsoleReporter : StreamingReporterBase
                          std::size_t row)
     {
         for (std::vector< SummaryColumn >::const_iterator it = cols.begin();
-             it != cols.end();
-             ++it)
+             it != cols.end(); ++it)
         {
             std::string value = it->rows[row];
             if (it->label.empty())
@@ -10213,7 +10191,8 @@ struct CompactReporter : StreamingReporterBase
             stream << "Failed " << bothOrAll(totals.testCases.failed)
                    << pluralise(totals.testCases.failed, "test case")
                    << ", "
-                      "failed " << qualify_assertions_failed
+                      "failed "
+                   << qualify_assertions_failed
                    << pluralise(totals.assertions.failed, "assertion") << ".";
         }
         else if (totals.assertions.total() == 0)
@@ -10349,10 +10328,9 @@ int main(int argc, char *const argv[])
 // CATCH_
 #ifdef CATCH_CONFIG_PREFIX_ALL
 
-#define CATCH_REQUIRE(expr)                               \
-    INTERNAL_CATCH_TEST(expr,                             \
-                        Catch::ResultDisposition::Normal, \
-                        "CATCH_"                          \
+#define CATCH_REQUIRE(expr)                                     \
+    INTERNAL_CATCH_TEST(expr, Catch::ResultDisposition::Normal, \
+                        "CATCH_"                                \
                         "REQUIRE")
 #define CATCH_REQUIRE_FALSE(expr)                                \
     INTERNAL_CATCH_TEST(expr,                                    \
@@ -10360,32 +10338,30 @@ int main(int argc, char *const argv[])
                             Catch::ResultDisposition::FalseTest, \
                         "CATCH_REQUIRE_FALSE")
 
-#define CATCH_REQUIRE_THROWS(expr) \
-    INTERNAL_CATCH_THROWS(         \
-        expr, Catch::ResultDisposition::Normal, "CATCH_REQUIRE_THROWS")
+#define CATCH_REQUIRE_THROWS(expr)                                \
+    INTERNAL_CATCH_THROWS(expr, Catch::ResultDisposition::Normal, \
+                          "CATCH_REQUIRE_THROWS")
 #define CATCH_REQUIRE_THROWS_AS(expr, exceptionType)           \
-    INTERNAL_CATCH_THROWS_AS(expr,                             \
-                             exceptionType,                    \
+    INTERNAL_CATCH_THROWS_AS(expr, exceptionType,              \
                              Catch::ResultDisposition::Normal, \
                              "CATCH_REQUIRE_THROWS_AS")
-#define CATCH_REQUIRE_NOTHROW(expr) \
-    INTERNAL_CATCH_NO_THROW(        \
-        expr, Catch::ResultDisposition::Normal, "CATCH_REQUIRE_NOTHROW")
+#define CATCH_REQUIRE_NOTHROW(expr)                                 \
+    INTERNAL_CATCH_NO_THROW(expr, Catch::ResultDisposition::Normal, \
+                            "CATCH_REQUIRE_NOTHROW")
 
-#define CATCH_CHECK(expr) \
-    INTERNAL_CATCH_TEST(  \
-        expr, Catch::ResultDisposition::ContinueOnFailure, "CATCH_CHECK")
+#define CATCH_CHECK(expr)                                                  \
+    INTERNAL_CATCH_TEST(expr, Catch::ResultDisposition::ContinueOnFailure, \
+                        "CATCH_CHECK")
 #define CATCH_CHECK_FALSE(expr)                                       \
     INTERNAL_CATCH_TEST(expr,                                         \
                         Catch::ResultDisposition::ContinueOnFailure | \
                             Catch::ResultDisposition::FalseTest,      \
                         "CATCH_CHECK_FALSE")
-#define CATCH_CHECKED_IF(expr) \
-    INTERNAL_CATCH_IF(         \
-        expr, Catch::ResultDisposition::ContinueOnFailure, "CATCH_CHECKED_IF")
-#define CATCH_CHECKED_ELSE(expr)                                     \
-    INTERNAL_CATCH_ELSE(expr,                                        \
-                        Catch::ResultDisposition::ContinueOnFailure, \
+#define CATCH_CHECKED_IF(expr)                                           \
+    INTERNAL_CATCH_IF(expr, Catch::ResultDisposition::ContinueOnFailure, \
+                      "CATCH_CHECKED_IF")
+#define CATCH_CHECKED_ELSE(expr)                                           \
+    INTERNAL_CATCH_ELSE(expr, Catch::ResultDisposition::ContinueOnFailure, \
                         "CATCH_CHECKED_ELSE")
 #define CATCH_CHECK_NOFAIL(expr)                                      \
     INTERNAL_CATCH_TEST(expr,                                         \
@@ -10393,35 +10369,30 @@ int main(int argc, char *const argv[])
                             Catch::ResultDisposition::SuppressFail,   \
                         "CATCH_CHECK_NOFAIL")
 
-#define CATCH_CHECK_THROWS(expr)                                       \
-    INTERNAL_CATCH_THROWS(expr,                                        \
-                          Catch::ResultDisposition::ContinueOnFailure, \
+#define CATCH_CHECK_THROWS(expr)                                             \
+    INTERNAL_CATCH_THROWS(expr, Catch::ResultDisposition::ContinueOnFailure, \
                           "CATCH_CHECK_THROWS")
 #define CATCH_CHECK_THROWS_AS(expr, exceptionType)                        \
-    INTERNAL_CATCH_THROWS_AS(expr,                                        \
-                             exceptionType,                               \
+    INTERNAL_CATCH_THROWS_AS(expr, exceptionType,                         \
                              Catch::ResultDisposition::ContinueOnFailure, \
                              "CATCH_CHECK_THROWS_AS")
-#define CATCH_CHECK_NOTHROW(expr)                                        \
-    INTERNAL_CATCH_NO_THROW(expr,                                        \
-                            Catch::ResultDisposition::ContinueOnFailure, \
+#define CATCH_CHECK_NOTHROW(expr)                                              \
+    INTERNAL_CATCH_NO_THROW(expr, Catch::ResultDisposition::ContinueOnFailure, \
                             "CATCH_CHECK_NOTHROW")
 
 #define CHECK_THAT(arg, matcher)                                     \
-    INTERNAL_CHECK_THAT(arg,                                         \
-                        matcher,                                     \
+    INTERNAL_CHECK_THAT(arg, matcher,                                \
                         Catch::ResultDisposition::ContinueOnFailure, \
                         "CATCH_CHECK_THAT")
-#define CATCH_REQUIRE_THAT(arg, matcher) \
-    INTERNAL_CHECK_THAT(                 \
-        arg, matcher, Catch::ResultDisposition::Normal, "CATCH_REQUIRE_THAT")
+#define CATCH_REQUIRE_THAT(arg, matcher)                                \
+    INTERNAL_CHECK_THAT(arg, matcher, Catch::ResultDisposition::Normal, \
+                        "CATCH_REQUIRE_THAT")
 
 #define CATCH_INFO(msg) INTERNAL_CATCH_INFO(msg, "CATCH_INFO")
 #define CATCH_WARN(msg)                                             \
     INTERNAL_CATCH_MSG(Catch::ResultWas::Warning,                   \
                        Catch::ResultDisposition::ContinueOnFailure, \
-                       "CATCH_WARN",                                \
-                       msg)
+                       "CATCH_WARN", msg)
 #define CATCH_SCOPED_INFO(msg) INTERNAL_CATCH_INFO(msg, "CATCH_INFO")
 #define CATCH_CAPTURE(msg) \
     INTERNAL_CATCH_INFO(#msg " := " << msg, "CATCH_CAPTURE")
@@ -10435,16 +10406,14 @@ int main(int argc, char *const argv[])
 #define CATCH_METHOD_AS_TEST_CASE(method, ...) \
     INTERNAL_CATCH_METHOD_AS_TEST_CASE(method, __VA_ARGS__)
 #define CATCH_SECTION(...) INTERNAL_CATCH_SECTION(__VA_ARGS__)
-#define CATCH_FAIL(...)                                   \
-    INTERNAL_CATCH_MSG(Catch::ResultWas::ExplicitFailure, \
-                       Catch::ResultDisposition::Normal,  \
-                       "CATCH_FAIL",                      \
+#define CATCH_FAIL(...)                                                \
+    INTERNAL_CATCH_MSG(Catch::ResultWas::ExplicitFailure,              \
+                       Catch::ResultDisposition::Normal, "CATCH_FAIL", \
                        __VA_ARGS__)
 #define CATCH_SUCCEED(...)                                          \
     INTERNAL_CATCH_MSG(Catch::ResultWas::Ok,                        \
                        Catch::ResultDisposition::ContinueOnFailure, \
-                       "CATCH_SUCCEED",                             \
-                       __VA_ARGS__)
+                       "CATCH_SUCCEED", __VA_ARGS__)
 #else
 #define CATCH_TEST_CASE(name, description) \
     INTERNAL_CATCH_TESTCASE(name, description)
@@ -10456,14 +10425,11 @@ int main(int argc, char *const argv[])
     INTERNAL_CATCH_SECTION(name, description)
 #define CATCH_FAIL(msg)                                   \
     INTERNAL_CATCH_MSG(Catch::ResultWas::ExplicitFailure, \
-                       Catch::ResultDisposition::Normal,  \
-                       "CATCH_FAIL",                      \
-                       msg)
+                       Catch::ResultDisposition::Normal, "CATCH_FAIL", msg)
 #define CATCH_SUCCEED(msg)                                          \
     INTERNAL_CATCH_MSG(Catch::ResultWas::Ok,                        \
                        Catch::ResultDisposition::ContinueOnFailure, \
-                       "CATCH_SUCCEED",                             \
-                       msg)
+                       "CATCH_SUCCEED", msg)
 #endif
 #define CATCH_ANON_TEST_CASE() INTERNAL_CATCH_TESTCASE("", "")
 
@@ -10502,64 +10468,60 @@ int main(int argc, char *const argv[])
                             Catch::ResultDisposition::FalseTest, \
                         "REQUIRE_FALSE")
 
-#define REQUIRE_THROWS(expr) \
-    INTERNAL_CATCH_THROWS(   \
-        expr, Catch::ResultDisposition::Normal, "REQUIRE_THROWS")
+#define REQUIRE_THROWS(expr)                                      \
+    INTERNAL_CATCH_THROWS(expr, Catch::ResultDisposition::Normal, \
+                          "REQUIRE_THROWS")
 #define REQUIRE_THROWS_AS(expr, exceptionType)                 \
-    INTERNAL_CATCH_THROWS_AS(expr,                             \
-                             exceptionType,                    \
+    INTERNAL_CATCH_THROWS_AS(expr, exceptionType,              \
                              Catch::ResultDisposition::Normal, \
                              "REQUIRE_THROWS_AS")
-#define REQUIRE_NOTHROW(expr) \
-    INTERNAL_CATCH_NO_THROW(  \
-        expr, Catch::ResultDisposition::Normal, "REQUIRE_NOTHROW")
+#define REQUIRE_NOTHROW(expr)                                       \
+    INTERNAL_CATCH_NO_THROW(expr, Catch::ResultDisposition::Normal, \
+                            "REQUIRE_NOTHROW")
 
-#define CHECK(expr)      \
-    INTERNAL_CATCH_TEST( \
-        expr, Catch::ResultDisposition::ContinueOnFailure, "CHECK")
+#define CHECK(expr)                                                        \
+    INTERNAL_CATCH_TEST(expr, Catch::ResultDisposition::ContinueOnFailure, \
+                        "CHECK")
 #define CHECK_FALSE(expr)                                             \
     INTERNAL_CATCH_TEST(expr,                                         \
                         Catch::ResultDisposition::ContinueOnFailure | \
                             Catch::ResultDisposition::FalseTest,      \
                         "CHECK_FALSE")
-#define CHECKED_IF(expr) \
-    INTERNAL_CATCH_IF(   \
-        expr, Catch::ResultDisposition::ContinueOnFailure, "CHECKED_IF")
-#define CHECKED_ELSE(expr) \
-    INTERNAL_CATCH_ELSE(   \
-        expr, Catch::ResultDisposition::ContinueOnFailure, "CHECKED_ELSE")
+#define CHECKED_IF(expr)                                                 \
+    INTERNAL_CATCH_IF(expr, Catch::ResultDisposition::ContinueOnFailure, \
+                      "CHECKED_IF")
+#define CHECKED_ELSE(expr)                                                 \
+    INTERNAL_CATCH_ELSE(expr, Catch::ResultDisposition::ContinueOnFailure, \
+                        "CHECKED_ELSE")
 #define CHECK_NOFAIL(expr)                                            \
     INTERNAL_CATCH_TEST(expr,                                         \
                         Catch::ResultDisposition::ContinueOnFailure | \
                             Catch::ResultDisposition::SuppressFail,   \
                         "CHECK_NOFAIL")
 
-#define CHECK_THROWS(expr) \
-    INTERNAL_CATCH_THROWS( \
-        expr, Catch::ResultDisposition::ContinueOnFailure, "CHECK_THROWS")
+#define CHECK_THROWS(expr)                                                   \
+    INTERNAL_CATCH_THROWS(expr, Catch::ResultDisposition::ContinueOnFailure, \
+                          "CHECK_THROWS")
 #define CHECK_THROWS_AS(expr, exceptionType)                              \
-    INTERNAL_CATCH_THROWS_AS(expr,                                        \
-                             exceptionType,                               \
+    INTERNAL_CATCH_THROWS_AS(expr, exceptionType,                         \
                              Catch::ResultDisposition::ContinueOnFailure, \
                              "CHECK_THROWS_AS")
-#define CHECK_NOTHROW(expr)  \
-    INTERNAL_CATCH_NO_THROW( \
-        expr, Catch::ResultDisposition::ContinueOnFailure, "CHECK_NOTHROW")
+#define CHECK_NOTHROW(expr)                                                    \
+    INTERNAL_CATCH_NO_THROW(expr, Catch::ResultDisposition::ContinueOnFailure, \
+                            "CHECK_NOTHROW")
 
 #define CHECK_THAT(arg, matcher)                                     \
-    INTERNAL_CHECK_THAT(arg,                                         \
-                        matcher,                                     \
+    INTERNAL_CHECK_THAT(arg, matcher,                                \
                         Catch::ResultDisposition::ContinueOnFailure, \
                         "CHECK_THAT")
-#define REQUIRE_THAT(arg, matcher) \
-    INTERNAL_CHECK_THAT(           \
-        arg, matcher, Catch::ResultDisposition::Normal, "REQUIRE_THAT")
+#define REQUIRE_THAT(arg, matcher)                                      \
+    INTERNAL_CHECK_THAT(arg, matcher, Catch::ResultDisposition::Normal, \
+                        "REQUIRE_THAT")
 
 #define INFO(msg) INTERNAL_CATCH_INFO(msg, "INFO")
-#define WARN(msg)                                                   \
-    INTERNAL_CATCH_MSG(Catch::ResultWas::Warning,                   \
-                       Catch::ResultDisposition::ContinueOnFailure, \
-                       "WARN",                                      \
+#define WARN(msg)                                                           \
+    INTERNAL_CATCH_MSG(Catch::ResultWas::Warning,                           \
+                       Catch::ResultDisposition::ContinueOnFailure, "WARN", \
                        msg)
 #define SCOPED_INFO(msg) INTERNAL_CATCH_INFO(msg, "INFO")
 #define CAPTURE(msg) INTERNAL_CATCH_INFO(#msg " := " << msg, "CAPTURE")
@@ -10574,13 +10536,10 @@ int main(int argc, char *const argv[])
 #define SECTION(...) INTERNAL_CATCH_SECTION(__VA_ARGS__)
 #define FAIL(...)                                         \
     INTERNAL_CATCH_MSG(Catch::ResultWas::ExplicitFailure, \
-                       Catch::ResultDisposition::Normal,  \
-                       "FAIL",                            \
-                       __VA_ARGS__)
-#define SUCCEED(...)                                                \
-    INTERNAL_CATCH_MSG(Catch::ResultWas::Ok,                        \
-                       Catch::ResultDisposition::ContinueOnFailure, \
-                       "SUCCEED",                                   \
+                       Catch::ResultDisposition::Normal, "FAIL", __VA_ARGS__)
+#define SUCCEED(...)                                                           \
+    INTERNAL_CATCH_MSG(Catch::ResultWas::Ok,                                   \
+                       Catch::ResultDisposition::ContinueOnFailure, "SUCCEED", \
                        __VA_ARGS__)
 #else
 #define TEST_CASE(name, description) INTERNAL_CATCH_TESTCASE(name, description)
@@ -10591,13 +10550,10 @@ int main(int argc, char *const argv[])
 #define SECTION(name, description) INTERNAL_CATCH_SECTION(name, description)
 #define FAIL(msg)                                         \
     INTERNAL_CATCH_MSG(Catch::ResultWas::ExplicitFailure, \
-                       Catch::ResultDisposition::Normal,  \
-                       "FAIL",                            \
-                       msg)
-#define SUCCEED(msg)                                                \
-    INTERNAL_CATCH_MSG(Catch::ResultWas::Ok,                        \
-                       Catch::ResultDisposition::ContinueOnFailure, \
-                       "SUCCEED",                                   \
+                       Catch::ResultDisposition::Normal, "FAIL", msg)
+#define SUCCEED(msg)                                                           \
+    INTERNAL_CATCH_MSG(Catch::ResultWas::Ok,                                   \
+                       Catch::ResultDisposition::ContinueOnFailure, "SUCCEED", \
                        msg)
 #endif
 #define ANON_TEST_CASE() INTERNAL_CATCH_TESTCASE("", "")
