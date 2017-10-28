@@ -1,3 +1,9 @@
+libcpuaff (1.0.6-1) xenial; urgency=medium
+
+  * Hardened the tests and cleaned up a few minor bugs.
+
+ -- Daniel C. Dillon <dcdillon@gmail.com>  Sat, 28 Oct 2017 15:09:17 -0500
+
 libcpuaff (1.0.5-0~xenial) xenial; urgency=medium
 
   * Version

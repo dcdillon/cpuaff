@@ -1,19 +1,23 @@
 #!/bin/bash
 
-VERSION=""
+VERSION=`cat configure.ac | grep AC_INIT | grep -Po [0-9]+\.[0-9]+\.[0-9]+`
+DISTS="debian artful zesty yakkety xenial trusty"
 
-while getopts "v:" opt; do
-    case $opt in
-        v)
-            VERSION=$OPTARG
-            shift 2
-            ;;
-    esac
+for DIST in $DISTS; do
+    ARGS=""
+    CURRENT_VERSION=""
+
+    if [ ! -f debian.$DIST/changelog ]; then
+	ARGS="--create --package libcpuaff"
+    else
+        CURRENT_VERSION=`head -n1 debian.$DIST/changelog | grep -Po [0-9]+\.[0-9]+\.[0-9]+`
+    fi
+
+    if [ "$VERSION" = "$CURRENT_VERSION" ]; then
+        VERSION_ARGS="-i"
+    else
+        VERSION_ARGS="-v $VERSION-1"
+    fi
+
+    dch $ARGS $VERSION_ARGS -c debian.$DIST/changelog -D $DIST $*
 done
-
-dch -v $VERSION -c debian.debian/changelog -D unstable $*
-dch -v $VERSION~xenial -c debian.xenial/changelog -D xenial $*
-dch -v $VERSION~wily -c debian.wily/changelog -D wily $*
-dch -v $VERSION~vivid -c debian.vivid/changelog -D vivid $*
-dch -v $VERSION~trusty -c debian.trusty/changelog -D trusty $*
-dch -v $VERSION~precise -c debian.precise/changelog -D precise $*
