@@ -32,17 +32,21 @@
 FILES=`find -name *.hpp`
 
 for FILE in $FILES ; do
-	clang-format -style=file -i $FILE
-done;
+	BASENAME=`basename $FILE`
+
+	if [ "$BASENAME" != "catch.hpp" ]; then
+		clang-format -style=file -i $FILE
+	fi
+done
 
 FILES=`find -name *.cpp`
 
 for FILE in $FILES ; do
 	clang-format -style=file -i $FILE
-done;
+done
 
 FILES=`find -name *.inl`
 
 for FILE in $FILES ; do
 	clang-format -style=file -i $FILE
-done;
+done
