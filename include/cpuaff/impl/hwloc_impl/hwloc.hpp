@@ -39,6 +39,8 @@
 
 #include <hwloc.h>
 #include <iostream>
+#include <cstdio>
+
 namespace cpuaff
 {
 namespace impl
@@ -227,6 +229,8 @@ struct set_affinity
         bool retval = (0 == hwloc_set_cpubind(topology::instance().get(),
                                               cpu_set, HWLOC_CPUBIND_THREAD));
         hwloc_bitmap_free(cpu_set);
+        
+        return retval;
     }
 };
 
