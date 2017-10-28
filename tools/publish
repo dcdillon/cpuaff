@@ -31,16 +31,16 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-pushd $DIR/.. > /dev/null 2>&1
+pushd $DIR/../packaging > /dev/null 2>&1
 
-./generate_deb -S $*
+../tools/generate_deb -S $*
 
 for DIST in $*; do
     pushd deb.$DIST
 
     CHANGES=`ls *.changes | tail -1`
     debsign $CHANGES
-    dput ppa:dcdillon/ppa $CHANGES
+    echo dput ppa:dcdillon/ppa $CHANGES
 
     popd
 done
