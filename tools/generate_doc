@@ -1,0 +1,10 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+pushd $DIR/.. > /dev/null 2>&1
+
+rm -rf doc/*
+doxygen
+
+popd > /dev/null 2>&1

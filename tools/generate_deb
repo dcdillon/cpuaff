@@ -29,6 +29,10 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+pushd $DIR/../packaging > /dev/null 2>&1
+
 OPTIONS=""
 
 while getopts "S" opt; do
@@ -41,7 +45,7 @@ while getopts "S" opt; do
 done
 
 if [ $# -eq 0 ]; then
-    DISTS="debian artful zesty xenial trusty"
+    DISTS="artful zesty xenial trusty"
 else
     DISTS=$*
 fi
@@ -49,14 +53,16 @@ fi
 rm -rf deb.*
 rm -rf *.tar.gz
 
+pushd ..
 ./cleanup.sh
 ./bootstrap.sh
 ./configure
 make dist
+popd
 
 for DIST in $DISTS; do
     mkdir deb.$DIST
-    cp *.tar.gz deb.$DIST
+    cp ../*.tar.gz deb.$DIST
 
     pushd deb.$DIST
 
@@ -75,3 +81,5 @@ for DIST in $DISTS; do
 
     popd
 done
+
+popd > /dev/null 2>&1

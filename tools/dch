@@ -1,7 +1,11 @@
 #!/bin/bash
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+pushd $DIR/..  > /dev/null 2>&1
+
 VERSION=`cat configure.ac | grep AC_INIT | grep -Po [0-9]+\.[0-9]+\.[0-9]+`
-DISTS="debian artful zesty xenial trusty"
+DISTS="artful zesty xenial trusty"
 
 for DIST in $DISTS; do
     ARGS=""
@@ -21,3 +25,5 @@ for DIST in $DISTS; do
 
     dch $ARGS $VERSION_ARGS -c debian.$DIST/changelog -D $DIST $*
 done
+
+popd > /dev/null 2>&1
