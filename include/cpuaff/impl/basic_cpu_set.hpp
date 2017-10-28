@@ -33,6 +33,7 @@
 #include "../config.hpp"
 #include "basic_cpu.hpp"
 #include <set>
+#include <iostream>
 
 namespace cpuaff
 {
@@ -44,6 +45,26 @@ namespace impl
 template < typename TRAITS >
 class basic_cpu_set : public std::set< basic_cpu< TRAITS > >
 {
+public:
+    friend std::ostream &operator<<(std::ostream &s, const basic_cpu_set &obj)
+    {
+        typename basic_cpu_set::const_iterator i = obj.begin();
+        typename basic_cpu_set::const_iterator iend = obj.end();
+        
+        for ( ; i != iend; ++i)
+        {
+            if (i != obj.begin())
+            {
+                s << ", ";
+            }
+            
+            s << (*i);
+        }
+        
+        return s;
+    }
 };
+
+
 }  // namespace impl
 }  // namespace cpuaff

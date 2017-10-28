@@ -409,6 +409,7 @@ class basic_affinity_manager
             cpus_by_numa_[i->numa].insert(cpu);
             cpus_by_socket_[i->spec.socket()].insert(cpu);
             cpus_by_core_[i->spec.core()].insert(cpu);
+            cpus_by_socket_and_core_[std::make_pair(i->spec.socket(), i->spec.core())].insert(cpu);
             cpus_by_processing_unit_[i->spec.processing_unit()].insert(cpu);
         }
 
