@@ -31,4 +31,10 @@ case $host in
 		;;
 esac
 
+AC_ARG_ENABLE([travis], AS_HELP_STRING([--enable-travis],
+	      [Enable travis-ci test neutering]), CPPFLAGS="$CPPFLAGS -DUSING_TRAVIS_CI")
+
+AC_SUBST(AM_CPPFLAGS)
+AC_SUBST(AM_CXXFLAGS)
+
 AC_OUTPUT
