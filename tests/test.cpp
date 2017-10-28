@@ -65,6 +65,10 @@ TEST_CASE("affinity_manager", "[affinity_manager]")
 
     SECTION("affinity_manager member functions")
     {
+#ifdef CPUAFF_USE_HWLOC
+        WARN("Using hwloc library.");
+#endif
+
         REQUIRE(manager.has_cpus());
 
         cpuaff::cpu first_cpu;
