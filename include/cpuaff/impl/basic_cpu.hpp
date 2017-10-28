@@ -1,4 +1,4 @@
-/* Copyright (c) 2015, Daniel C. Dillon
+/* Copyright (c) 2015-2017, Daniel C. Dillon
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,9 +30,9 @@
 
 #pragma once
 
-#include "../fwd.hpp"
 #include "../config.hpp"
 #include "../cpu_spec.hpp"
+#include "../fwd.hpp"
 #include <iostream>
 
 namespace cpuaff
@@ -148,12 +148,13 @@ class basic_cpu
 };
 }  // namespace impl
 }  // namespace cpuaff
-   /*!
-    * Stream operator
-    *
-    * \print id, numa, socket, core, processing unit
-    *
-    */
+
+/*!
+* Stream operator
+*
+* Print [id, numa, socket, core, processing unit]
+*
+*/
 
 template < typename TRAITS >
 std::ostream &operator<<(std::ostream &s,

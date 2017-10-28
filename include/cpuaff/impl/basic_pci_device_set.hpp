@@ -1,4 +1,4 @@
-/* Copyright (c) 2015, Daniel C. Dillon
+/* Copyright (c) 2015-2017, Daniel C. Dillon
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without

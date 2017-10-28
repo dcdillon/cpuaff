@@ -1,4 +1,4 @@
-/* Copyright (c) 2015, Daniel C. Dillon
+/* Copyright (c) 2015-2017, Daniel C. Dillon
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,11 +30,11 @@
 
 #pragma once
 
-#include "../fwd.hpp"
 #include "../config.hpp"
+#include "../fwd.hpp"
 #include "../pci_device_spec.hpp"
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 
 namespace cpuaff
 {

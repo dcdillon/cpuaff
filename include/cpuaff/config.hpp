@@ -1,4 +1,4 @@
-/* Copyright (c) 2015, Daniel C. Dillon
+/* Copyright (c) 2015-2017, Daniel C. Dillon
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,8 +30,8 @@
 
 #pragma once
 
-#include "options.hpp"
 #include "fwd.hpp"
+#include "options.hpp"
 
 namespace cpuaff
 {
@@ -42,8 +42,8 @@ struct basic_traits
     typedef typename LOADER_TRAITS::cpu_identifier_wrapper_type
         cpu_identifier_wrapper_type;
     typedef typename LOADER_TRAITS::cpu_loader_type cpu_loader_type;
-    typedef typename LOADER_TRAITS::cpu_loader_vector_type
-        cpu_loader_vector_type;
+    typedef
+        typename LOADER_TRAITS::cpu_loader_vector_type cpu_loader_vector_type;
     typedef typename LOADER_TRAITS::get_affinity_type get_affinity_type;
     typedef typename LOADER_TRAITS::set_affinity_type set_affinity_type;
 
@@ -52,8 +52,8 @@ struct basic_traits
     typedef typename LOADER_TRAITS::pci_address_wrapper_type
         pci_address_wrapper_type;
     typedef typename LOADER_TRAITS::pci_loader_type pci_loader_type;
-    typedef typename LOADER_TRAITS::pci_loader_vector_type
-        pci_loader_vector_type;
+    typedef
+        typename LOADER_TRAITS::pci_loader_vector_type pci_loader_vector_type;
 #endif
 
     typedef typename NATIVE_TRAITS::cpu_identifier_type native_cpu_type;

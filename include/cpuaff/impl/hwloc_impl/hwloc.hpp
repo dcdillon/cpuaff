@@ -1,4 +1,4 @@
-/* Copyright (c) 2015, Daniel C. Dillon
+/* Copyright (c) 2015-2017, Daniel C. Dillon
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,8 +33,8 @@
 #include "../../cpu_spec.hpp"
 #include <cstring>
 #include <fstream>
-#include <set>
 #include <map>
+#include <set>
 #include <vector>
 
 #include <hwloc.h>
@@ -143,11 +143,9 @@ class topology_reader
         else if (obj->type == HWLOC_OBJ_PU)
         {
             cpus_.push_back(
-                cpu_info(cpu_spec(socket_type(socket_id_),
-                                  core_type(core_id_),
+                cpu_info(cpu_spec(socket_type(socket_id_), core_type(core_id_),
                                   processing_unit_type(processing_unit_id_++)),
-                         hwloc_bitmap_first(obj->cpuset),
-                         numa_type(numa_id_)));
+                         hwloc_bitmap_first(obj->cpuset), numa_type(numa_id_)));
         }
 
         for (unsigned int i = 0; i < obj->arity; ++i)
@@ -192,8 +190,8 @@ struct get_affinity
         bool retval = false;
         hwloc_cpuset_t cpu_set = hwloc_bitmap_alloc();
 
-        if (0 == hwloc_get_cpubind(
-                     topology::instance().get(), cpu_set, HWLOC_CPUBIND_THREAD))
+        if (0 == hwloc_get_cpubind(topology::instance().get(), cpu_set,
+                                   HWLOC_CPUBIND_THREAD))
         {
             unsigned int id;
             hwloc_bitmap_foreach_begin(id, cpu_set)
@@ -227,8 +225,7 @@ struct set_affinity
         }
 
         bool retval = (0 == hwloc_set_cpubind(topology::instance().get(),
-                                              cpu_set,
-                                              HWLOC_CPUBIND_THREAD));
+                                              cpu_set, HWLOC_CPUBIND_THREAD));
         hwloc_bitmap_free(cpu_set);
     }
 };

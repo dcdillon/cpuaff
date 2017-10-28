@@ -1,4 +1,4 @@
-/* Copyright (c) 2015, Daniel C. Dillon
+/* Copyright (c) 2015-2017, Daniel C. Dillon
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,14 +34,14 @@
 
 #include <cstring>
 #include <fstream>
-#include <set>
-#include <map>
-#include <vector>
 #include <iomanip>
+#include <map>
+#include <set>
+#include <vector>
 
+#include <libgen.h>
 #include <sched.h>
 #include <unistd.h>
-#include <libgen.h>
 
 #include "sysfs_reader.hpp"
 
@@ -129,11 +129,10 @@ struct cpu_loader
                 pu_id = pus_by_socket_by_core[pu->socket][core].size();
                 pus_by_socket_by_core[pu->socket][core].push_back(0);
 
-                v.push_back(cpu_info(cpu_spec(socket_type(pu->socket),
-                                              core_type(core),
-                                              processing_unit_type(pu_id)),
-                                     cpu_identifier_type(pu->native),
-                                     numa_type(pu->node)));
+                v.push_back(cpu_info(
+                    cpu_spec(socket_type(pu->socket), core_type(core),
+                             processing_unit_type(pu_id)),
+                    cpu_identifier_type(pu->native), numa_type(pu->node)));
             }
         }
 

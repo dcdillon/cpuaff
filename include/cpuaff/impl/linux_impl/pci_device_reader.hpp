@@ -1,4 +1,4 @@
-/* Copyright (c) 2015, Daniel C. Dillon
+/* Copyright (c) 2015-2017, Daniel C. Dillon
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,16 +29,16 @@
  */
 
 #pragma once
-#include <string>
+#include "../../pci_device_spec.hpp"
+#include "set_reader.hpp"
+#include <cstdlib>
+#include <dirent.h>
 #include <fstream>
+#include <iostream>
 #include <sstream>
 #include <stdint.h>
+#include <string>
 #include <vector>
-#include <cstdlib>
-#include "../../pci_device_spec.hpp"
-#include <dirent.h>
-#include "set_reader.hpp"
-#include <iostream>
 
 namespace cpuaff
 {
