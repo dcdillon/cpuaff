@@ -1,5 +1,9 @@
 #!/bin/bash
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+pushd $DIR  > /dev/null 2>&1
+
 ## let the Makefile help us some
 test -f Makefile && make distclean
 
@@ -23,6 +27,8 @@ rm -rf Makefile.in \
     include/Makefile.in
 
 ## remove (maybe) some other generated files
-rm -rf deb
+rm -rf packaging/deb
 rm -rf cpuaff*.tar.gz
-rm -rf deb.*
+rm -rf packaging/deb.*
+
+popd > /dev/null 2>&1

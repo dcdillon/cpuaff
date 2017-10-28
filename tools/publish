@@ -29,24 +29,20 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-FILES=`find -name *.hpp`
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-for FILE in $FILES ; do
-	BASENAME=`basename $FILE`
+pushd $DIR/../packaging > /dev/null 2>&1
 
-	if [ "$BASENAME" != "catch.hpp" ]; then
-		clang-format -style=file -i $FILE
-	fi
+../tools/generate_deb -S $*
+
+for DIST in $*; do
+    pushd deb.$DIST
+
+    CHANGES=`ls *.changes | tail -1`
+    debsign $CHANGES
+    echo dput ppa:dcdillon/ppa $CHANGES
+
+    popd
 done
 
-FILES=`find -name *.cpp`
-
-for FILE in $FILES ; do
-	clang-format -style=file -i $FILE
-done
-
-FILES=`find -name *.inl`
-
-for FILE in $FILES ; do
-	clang-format -style=file -i $FILE
-done
+popd > /dev/null 2>&1
