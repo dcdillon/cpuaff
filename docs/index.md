@@ -1,6 +1,7 @@
 ---
 title: Home
-layout: default 
+layout: default
+theme: jekyll-theme-slate
 ---
 
 ### News
