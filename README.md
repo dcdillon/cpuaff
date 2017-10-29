@@ -12,7 +12,7 @@ To see a list of supported platforms click [here](http://dcdillon.github.io/cpua
 
 The latest source release is [cpuaff-1.0.2](http://dcdillon.github.io/cpuaff/releases/cpuaff-1.0.2.tar.gz).
 
-The latest Ubuntu pacakges are available from [ppa:dcdillon/ppa](https://launchpad.net/~dcdillon/+archive/ubuntu/ppa).
+The latest Ubuntu packages are available from [ppa:dcdillon/ppa](https://launchpad.net/~dcdillon/+archive/ubuntu/ppa).
 
 To get other releases, go to the [downloads](http://dcdillon.github.io/cpuaff/downloads.html) page.
 
