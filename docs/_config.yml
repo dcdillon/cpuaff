@@ -25,7 +25,7 @@ github_username:  dcdillon
 # Build settings
 markdown: kramdown
 highlight: rouge
-theme: slate
+theme: Slate
 plugins:
   - jekyll-feed
 
