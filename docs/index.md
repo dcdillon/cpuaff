@@ -1,6 +1,6 @@
 ---
 title: Home
-layout: slate
+layout: post 
 ---
 
 ### News
