@@ -1,23 +1,5 @@
-libcpuaff (1.0.6-1) xenial; urgency=medium
+libcpuaff (1.0.6-0+xenial0) xenial; urgency=medium
 
-  * Hardened the tests and cleaned up a few minor bugs.
+  * Version 1.0.6
 
- -- Daniel C. Dillon <dcdillon@gmail.com>  Sat, 28 Oct 2017 15:09:17 -0500
-
-libcpuaff (1.0.5-0~xenial) xenial; urgency=medium
-
-  * Version
-
- -- Daniel C. Dillon <dcdillon@gmail.com>  Fri, 06 May 2016 10:50:00 -0500
-
-libcpuaff (1.0.4-1~wily) wily; urgency=medium
-
-  * Configuring for wily
-
- -- Daniel C. Dillon <dcdillon@gmail.com>  Thu, 19 Nov 2015 06:17:42 -0600
-
-libcpuaff (1.0.2-0) unstable; urgency=low
-
-  * Initial release
-
- -- Daniel C. Dillon <dcdillon@gmail.com>  Sun, 13 Sep 2015 15:21:04 -0500
+ -- Daniel C. Dillon <dcdillon@gmail.com>  Sun, 29 Oct 2017 07:29:20 -0500

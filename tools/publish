@@ -33,14 +33,16 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 pushd $DIR/../packaging > /dev/null 2>&1
 
-../tools/generate_deb -S $*
+DISTS="artful zesty xenial trusty"
 
-for DIST in $*; do
+../tools/generate_deb -S $DISTS
+
+for DIST in $DISTS; do
     pushd deb.$DIST
 
     CHANGES=`ls *.changes | tail -1`
     debsign $CHANGES
-    dput ppa:dcdillon/ppa $CHANGES
+    dput ppa:dcdillon/cpuaff $CHANGES
 
     popd
 done

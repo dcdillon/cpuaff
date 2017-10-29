@@ -7,6 +7,8 @@ pushd $DIR/..  > /dev/null 2>&1
 VERSION=`cat configure.ac | grep AC_INIT | grep -Po [0-9]+\.[0-9]+\.[0-9]+`
 DISTS="artful zesty xenial trusty"
 
+pushd packaging > /dev/null 2>&1
+
 for DIST in $DISTS; do
     ARGS=""
     CURRENT_VERSION=""
@@ -20,10 +22,12 @@ for DIST in $DISTS; do
     if [ "$VERSION" = "$CURRENT_VERSION" ]; then
         VERSION_ARGS="-i"
     else
-        VERSION_ARGS="-v $VERSION-1"
+        VERSION_ARGS="-v $VERSION-0+${DIST}0"
     fi
 
     dch $ARGS $VERSION_ARGS -c debian.$DIST/changelog -D $DIST $*
 done
+
+popd > /dev/null 2>&1
 
 popd > /dev/null 2>&1
