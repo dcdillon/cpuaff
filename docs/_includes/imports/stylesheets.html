@@ -1,0 +1,10 @@
+{% include css global="reset.css" %}
+{% if site.pygments %}{% include css global="pygments-syntax-hilighting.css" %}{% endif %}
+
+{% if page.style == "slate" %}
+	{% include slate/stylesheets.html %}
+{% endif %}
+
+{% include css global="snippets.css" %}
+{% include css global="tiny-images.css" %}
+
