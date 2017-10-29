@@ -1,0 +1,37 @@
+/*******************************************************************************
+Custom modifications to the Slate Theme by Jason Costello
+*******************************************************************************/
+
+#header_wrap .inner {
+	text-align: left;
+}
+
+a#title_link {
+	display: block;
+}
+
+img.title_link {
+	float: right;
+	vertical-align: bottom;
+	padding: 0px;
+	margin: 0px;
+	border: 0px;
+
+	box-shadow: none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	-o-box-shadow: none;
+	-ms-box-shadow: none;
+}
+
+#main_content p {
+	text-align: justify;
+}
+
+#footer_wrap .inner {
+	text-align: left;
+}
+
+a#footer {
+	color: #373737;
+}

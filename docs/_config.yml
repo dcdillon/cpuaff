@@ -3,3 +3,7 @@ highlighter: rouge
 theme: jekyll-theme-slate
 
 name: cpuaff
+stylesheets: /assets/stylesheets
+javascripts: /assets/javascripts
+images:      /assets/images
+fonts:       /assets/fonts
