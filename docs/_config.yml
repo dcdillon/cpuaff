@@ -1,1 +1,5 @@
+markdown: kramdown
+highlighter: rouge
 theme: jekyll-theme-slate
+
+name: cpuaff
