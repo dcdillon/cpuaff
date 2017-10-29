@@ -1,1 +1,0 @@
-<script type="text/javascript" src="{% if include.url %}{{ include.url }}{% elsif include.global %}{{ site.global_javascripts }}/{{ include.global }}{% else %}{{ site.javascripts }}/{{ include.local }}{% endif %}"></script>
