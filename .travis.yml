@@ -22,6 +22,7 @@ before_install:
 
 install:
   - if [ $CXX == g++ ]; then sudo apt-get install g++-4.9; export CXX="g++-4.9"; fi
+  - sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-5 90
 
 before_script:
   - if [ $TRAVIS_OS_NAME == linux ]; then ./bootstrap.sh; fi
