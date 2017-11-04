@@ -28,7 +28,7 @@ before_script:
 
 script: 
   - ./configure && make && make check && ./cleanup.sh && ./bootstrap.sh && ./configure --with-hwloc && make && make check
-  - for filename in `find . | egrep '\.cpp'`; do; gcov-5 -n -o . $filename > /dev/null; done
+  - for filename in `find . | egrep '\.cpp'`; do gcov-5 -n -o . $filename > /dev/null; done
   - codecov
 
 notifications:
