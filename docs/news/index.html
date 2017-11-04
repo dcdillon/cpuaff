@@ -1,0 +1,29 @@
+---
+title: News
+layout: default
+---
+
+<h3>News</h3>
+        
+{% for post in paginator.posts %}
+
+  <h5>
+    <a href="{{site.baseurl }}/{{ site.posts.first.url }}">{{ post.title }}</a>
+  </h5>
+  <p>
+    [{{post.date}}]
+  </p>
+
+  {{ post.content }}
+  
+{% endfor %}
+
+{% if paginator.previous_page %}
+  <a href="{{ paginator.previous_page_path }}" class="previous">Previous</a>
+{% endif %}
+
+Page: {{ paginator.page }} of {{ paginator.total_pages }}
+
+{% if paginator.next_page %}
+  <a href="{{ paginator.next_page_path }}" class="next">Next</a>
+{% endif %}

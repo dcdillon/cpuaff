@@ -1,0 +1,9 @@
+var searchData=
+[
+  ['native_5fcpu_5fmapper',['native_cpu_mapper',['../namespacecpuaff.html#acade2b1a76687a4cd3fc6fc431ced361',1,'cpuaff']]],
+  ['native_5fcpu_5ftype',['native_cpu_type',['../structcpuaff_1_1basic__traits.html#a4d0396b96daee51cbbd3c9256b88d1ae',1,'cpuaff::basic_traits::native_cpu_type()'],['../classcpuaff_1_1impl_1_1basic__affinity__manager.html#a1c7ed5ee2ef7d2203c5d214589cd1325',1,'cpuaff::impl::basic_affinity_manager::native_cpu_type()'],['../classcpuaff_1_1impl_1_1basic__native__cpu__mapper.html#ab5134e763e4c2580cb67b4fe8f599c68',1,'cpuaff::impl::basic_native_cpu_mapper::native_cpu_type()']]],
+  ['native_5fcpu_5fwrapper',['native_cpu_wrapper',['../namespacecpuaff.html#a94189d76b98d6aeede25471bdc079d7f',1,'cpuaff']]],
+  ['native_5fcpu_5fwrapper_5ftype',['native_cpu_wrapper_type',['../structcpuaff_1_1basic__traits.html#ae1366dd08575314ce7deab8d56953dd4',1,'cpuaff::basic_traits::native_cpu_wrapper_type()'],['../classcpuaff_1_1impl_1_1basic__affinity__manager.html#a5efc4cc79e24d15ae71d1bb6336056e1',1,'cpuaff::impl::basic_affinity_manager::native_cpu_wrapper_type()'],['../classcpuaff_1_1impl_1_1basic__native__cpu__mapper.html#ac371ee20ff3c7f0e5467bd43269952e2',1,'cpuaff::impl::basic_native_cpu_mapper::native_cpu_wrapper_type()']]],
+  ['native_5fget_5faffinity_5ftype',['native_get_affinity_type',['../structcpuaff_1_1basic__traits.html#a2a04a7d9474b434fd911a2cf67b10844',1,'cpuaff::basic_traits::native_get_affinity_type()'],['../classcpuaff_1_1impl_1_1basic__affinity__manager.html#af2580cf2d84f0e880458a7d4b91a109f',1,'cpuaff::impl::basic_affinity_manager::native_get_affinity_type()'],['../classcpuaff_1_1impl_1_1basic__native__cpu__mapper.html#a4f897147c4f4c8e93341fa957765b965',1,'cpuaff::impl::basic_native_cpu_mapper::native_get_affinity_type()']]],
+  ['numa_5ftype',['numa_type',['../namespacecpuaff.html#a76e80764923c8be2ba39e967477f0f16',1,'cpuaff']]]
+];
