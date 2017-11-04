@@ -28,8 +28,8 @@ before_script:
   - if [ $TRAVIS_OS_NAME == linux ]; then ./bootstrap.sh; fi
 
 script: 
-  - ./configure && make CXXFLAGS="-fprofile-arcs -ftest-coverage" LDFLAGS="-lgconv" && make check && ./cleanup.sh && ./bootstrap.sh && ./configure --with-hwloc && make && make check
-  - for filename in `find . | egrep '\.cpp'`; do gcov-5 -n -o . $filename > /dev/null; done
+  - if [ $CXX == g++ ]; then CXXFLAGS="-fprofile-arcs -ftest-coverage"; LDFLAGS="-lgcov"; fi && ./configure && make && make check && ./cleanup.sh && ./bootstrap.sh && ./configure --with-hwloc && make && make check
+  - if [ $CXX == g++ ]; then for filename in `find . | egrep '\.cpp'`; do gcov-5 -n -o . $filename > /dev/null; done; fi
   - codecov
 
 notifications:
