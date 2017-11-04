@@ -4,7 +4,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 pushd $DIR/.. > /dev/null 2>&1
 
-rm -rf doc/*
+rm -rf docs/html/*
 doxygen
 
 popd > /dev/null 2>&1
