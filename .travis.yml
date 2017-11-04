@@ -19,7 +19,6 @@ before_install:
   - sudo apt-get update && sudo apt-get install -y automake autoconf libhwloc-dev
   - if [ $CXX == g++ ]; then sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test; sudo apt-get update -qq; fi
   - sudo pip install codecov
-  - codecov
 
 install:
   - if [ $CXX == g++ ]; then sudo apt-get install g++-4.9; export CXX="g++-4.9"; fi
@@ -29,6 +28,7 @@ before_script:
 
 script: 
   - ./configure && make && make check && ./cleanup.sh && ./bootstrap.sh && ./configure --with-hwloc && make && make check
+  - codecov
 
 notifications:
   email:
