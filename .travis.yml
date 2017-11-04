@@ -27,7 +27,7 @@ before_script:
   - if [ $TRAVIS_OS_NAME == linux ]; then ./bootstrap.sh; fi
 
 script: 
-  - ./configure && make && make check && ./cleanup.sh && ./bootstrap.sh && ./configure --with-hwloc && make && make check
+  - ./configure && make CXXFLAGS="-fprofile-arcs -ftest-coverage" LDFLAGS="-lgconv" && make check && ./cleanup.sh && ./bootstrap.sh && ./configure --with-hwloc && make && make check
   - for filename in `find . | egrep '\.cpp'`; do gcov-5 -n -o . $filename > /dev/null; done
   - codecov
 
