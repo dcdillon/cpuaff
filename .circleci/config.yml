@@ -10,27 +10,26 @@ jobs:
           name: Update Package List
           command: apt-get update
       - run:
-          name: Install g++
-          command: apt-get install -y g++
+          name: Install Compilers
+          command: apt-get install -y g++ clang
       - run:
-          name: Install autotools
-          command: apt-get install -y autoconf automake
+          name: Install Development Tools
+          command: apt-get install -y make autoconf automake
       - run:
-          name: Install hwloc
+          name: Install Dependencies
           command: apt-get install -y libhwloc-dev
       - run:
-          name: Install make
-          command: apt-get install -y make
-      - run:
-          name: Greeting
-          command: echo Hello, world.
-      - run:
-          name: Print the Current Time
-          command: date
-      - run:
-          name: Build
+          name: Build with g++
           command: ./bootstrap.sh && ./configure && make && make check
       - run:
-          name: Version
-          command: g++ --version
-
+          name: Cleanup
+          command: ./cleanup.sh
+      - run:
+          name: Build with hwloc
+          command: ./bootstrap.sh && ./configure --with-hwloc && make && make check
+      - run:
+          name: Cleanup
+          command: ./cleanup.sh
+      - run:
+          name: Build with clang++
+          command: ./bootstrap.sh && CXX=clang++ ./configure && make && make check
