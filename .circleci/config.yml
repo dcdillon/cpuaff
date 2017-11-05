@@ -19,6 +19,9 @@ jobs:
           name: Install hwloc
           command: apt-get install -y libhwloc-dev
       - run:
+          name: Install make
+          command: apt-get install -y make
+      - run:
           name: Greeting
           command: echo Hello, world.
       - run:
