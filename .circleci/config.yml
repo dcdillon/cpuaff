@@ -10,11 +10,8 @@ jobs:
           name: Update Package List
           command: apt-get update
       - run:
-          name: Install Compilers
-          command: apt-get install -y g++ clang
-      - run:
           name: Install Development Tools
-          command: apt-get install -y make autoconf automake
+          command: apt-get install -y g++ clang make autoconf automake
       - run:
           name: Install Dependencies
           command: apt-get install -y libhwloc-dev
