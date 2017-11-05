@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       - image: debian:stretch
-      - image: 
+
     steps:
       - checkout
       - run:
