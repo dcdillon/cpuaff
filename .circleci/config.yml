@@ -7,8 +7,17 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-          name: Install dependenies
-          command: apt-get update && apt-get install -y autoconf automake libhwloc-dev
+          name: Update Package List
+          command: apt-get update
+      - run:
+          name: Install g++
+          command: apt-get install -y g++
+      - run:
+          name: Install autotools
+          command: apt-get install -y autoconf automake
+      - run:
+          name: Install hwloc
+          command: apt-get install -y libhwloc-dev
       - run:
           name: Greeting
           command: echo Hello, world.
