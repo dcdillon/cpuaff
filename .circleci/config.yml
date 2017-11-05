@@ -13,5 +13,8 @@ jobs:
           command: date
       - run:
           name: Build
-          command: g++ --version && ./bootstrap.sh && ./configure && make && make check
+          command: ./bootstrap.sh && ./configure && make && make check
+      - run:
+          name: Version
+          command: g++ --version
 
